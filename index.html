@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surakkha &mdash; Project File</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEEBE1;
+    --paper-raised:#F6F4EC;
+    --ink:#22302B;
+    --ink-soft:#5B6660;
+    --rust:#B5562A;
+    --rust-dark:#7C3A19;
+    --moss:#445F4E;
+    --moss-dark:#2C4137;
+    --line:#C9C2AC;
+    --line-strong:#A79E82;
+    --tab-overview:#B5562A;
+    --tab-gallery:#3E5C6E;
+    --tab-activities:#445F4E;
+    --tab-milestones:#7A5C8E;
+    --tab-actlog:#2E6E8E;
+    --tab-distlog:#8E6E2E;
+    --tab-reports:#8B5E3C;
+    --tab-agenda:#3E5C6E;
+    --tab-docs:#6E5B3E;
+    --tab-dashboard:#5B4B8A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  h1,h2,h3{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    margin:0 0 .4em;
+    color:var(--ink);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin:0 0 .5em;
+  }
+  p{line-height:1.6; color:var(--ink-soft);}
+
+  /* ---------- GATE ---------- */
+  #gate{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .folder{
+    width:100%;
+    max-width:380px;
+    background:var(--paper-raised);
+    border:1px solid var(--line-strong);
+    border-radius:4px;
+    padding:40px 36px;
+    position:relative;
+    text-align:center;
+  }
+  .folder:before{
+    content:"";
+    position:absolute;
+    top:-14px; left:28px;
+    width:90px; height:14px;
+    background:var(--paper-raised);
+    border:1px solid var(--line-strong);
+    border-bottom:none;
+    border-radius:4px 4px 0 0;
+  }
+  .stamp{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.15em;
+    color:var(--rust);
+    border:1.5px solid var(--rust);
+    border-radius:3px;
+    padding:4px 10px;
+    transform:rotate(-3deg);
+    margin-bottom:18px;
+  }
+  #gate input[type=password]{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:15px;
+    padding:11px 12px;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+    margin:18px 0 10px;
+    letter-spacing:.1em;
+  }
+  #gate input[type=password]:focus{
+    outline:none;
+    border-color:var(--rust);
+  }
+  #gate button{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:11px;
+    border:none;
+    border-radius:3px;
+    background:var(--ink);
+    color:var(--paper);
+    cursor:pointer;
+  }
+  #gate button:hover{background:var(--moss-dark);}
+  #gate-error{
+    font-size:13px;
+    color:var(--rust-dark);
+    min-height:18px;
+    margin-top:8px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  /* ---------- APP SHELL ---------- */
+  #app{display:none;}
+  .shell{
+    display:flex;
+    min-height:100vh;
+  }
+  nav.tabs{
+    width:200px;
+    flex-shrink:0;
+    padding:32px 0;
+    background:var(--ink);
+  }
+  nav.tabs .brand{
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    font-weight:600;
+    color:var(--paper);
+    padding:0 20px 24px;
+    border-bottom:1px solid #3A4842;
+    margin-bottom:8px;
+  }
+  nav.tabs .brand span{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:.12em;
+    color:#8B968F;
+    text-transform:uppercase;
+    margin-top:4px;
+  }
+  .tab-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    color:#C7CDC8;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    font-weight:500;
+    padding:12px 20px;
+    cursor:pointer;
+    border-left:3px solid transparent;
+  }
+  .tab-btn .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--dot,#888);
+    flex-shrink:0;
+  }
+  .tab-btn:hover{background:#2C3934;}
+  .tab-btn.active{
+    background:#2C3934;
+    color:#fff;
+    border-left-color:var(--dot,#888);
+  }
+  main{
+    flex:1;
+    padding:44px 56px;
+    max-width:920px;
+  }
+  .panel{display:none;}
+  .panel.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- OVERVIEW ---------- */
+  .meta-row{display:flex; gap:24px; flex-wrap:wrap; margin:20px 0 28px;}
+  .meta-item{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+  .meta-item b{display:block; font-size:14px; color:var(--ink); font-family:'Inter',sans-serif; font-weight:600; margin-top:2px;}
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:20px 24px;
+    margin-bottom:16px;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+    margin-top:20px;
+  }
+  .gallery-grid figure{margin:0; background:var(--paper-raised); border:1px solid var(--line); border-radius:4px; overflow:hidden;}
+  .gallery-grid img{width:100%; height:160px; object-fit:cover; display:block;}
+  .gallery-grid figcaption{padding:10px 12px; font-size:13px; color:var(--ink-soft); font-family:'IBM Plex Mono',monospace;}
+
+  table.data-table tr.group-row td, table.ref-table tr.group-row td{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Fraunces',serif;
+    font-size:13px;
+    font-weight:600;
+    padding:9px 10px;
+  }
+  table.ref-table{width:100%; border-collapse:collapse; font-size:13px; background:var(--paper-raised);}
+  table.ref-table td{padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  table.ref-table td.mono{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--rust-dark); white-space:nowrap;}
+  table.ref-table tr:last-child td{border-bottom:none;}
+  .filter-input{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    padding:9px 12px;
+    border:1px solid var(--line-strong);
+    border-radius:4px;
+    margin:10px 0 16px;
+    background:#fff;
+    color:var(--ink);
+  }
+
+  /* ---------- ACTIVITIES TABLE ---------- */
+  .quarter-legend{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin:14px 0 18px;
+  }
+  .quarter-legend span{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:4px 8px;
+  }
+  .table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:4px;}
+  table.data-table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--paper-raised);
+    font-size:13px;
+    min-width:900px;
+  }
+  table.data-table th{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:10px 8px;
+    border-bottom:1px solid var(--line-strong);
+    white-space:nowrap;
+  }
+  table.data-table td{
+    padding:6px 8px;
+    border-bottom:1px solid var(--line);
+    vertical-align:middle;
+  }
+  table.data-table tr:last-child td{border-bottom:none;}
+  table.data-table input, table.data-table select{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    padding:6px 6px;
+    border:1px solid transparent;
+    border-radius:3px;
+    background:transparent;
+    color:var(--ink);
+  }
+  table.data-table input[type=number]{width:60px;}
+  table.data-table td:nth-child(3) input, table.data-table td:nth-child(4) input{min-width:130px;}
+  body.edit-mode table.data-table input:not([disabled]),
+  body.edit-mode table.data-table select:not([disabled]){
+    border:1px dashed var(--line-strong);
+    background:#fffef8;
+  }
+  table.data-table .log-total{
+    font-family:'IBM Plex Mono',monospace;
+    text-align:center;
+    color:var(--ink);
+    font-weight:600;
+  }
+  table.data-table .remove-btn{position:static; width:20px; height:20px; font-size:12px;}
+
+  /* ---------- SEX-SEGREGATED DASHBOARD ---------- */
+  .qbar-row{display:flex; align-items:center; gap:12px; margin-bottom:10px;}
+  .qbar-row .qlabel{width:100px; flex-shrink:0; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+  .qbar-track{flex:1; height:16px; border-radius:4px; overflow:hidden; display:flex; background:var(--line);}
+  .qbar-seg{height:100%;}
+  .qbar-seg.girls{background:#B5562A;}
+  .qbar-seg.boys{background:#3E5C6E;}
+  .qbar-seg.women{background:#8B5E3C;}
+  .qbar-seg.men{background:#445F4E;}
+  .qbar-row .qtotal{width:48px; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+  .legend-row{display:flex; gap:16px; flex-wrap:wrap; margin:10px 0 18px; font-size:12px; color:var(--ink-soft);}
+  .legend-row span{display:inline-flex; align-items:center; gap:5px;}
+  .legend-row i{width:10px; height:10px; border-radius:2px; display:inline-block;}
+  .legend-row i.girls{background:#B5562A;} .legend-row i.boys{background:#3E5C6E;}
+  .legend-row i.women{background:#8B5E3C;} .legend-row i.men{background:#445F4E;}
+  table.month-table{width:100%; border-collapse:collapse; font-size:12.5px; margin-top:6px;}
+  table.month-table th{font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; color:var(--ink-soft); text-align:left; padding:6px 8px; border-bottom:1px solid var(--line-strong);}
+  table.month-table td{padding:6px 8px; border-bottom:1px solid var(--line); color:var(--ink);}
+  table.month-table tr:last-child td{border-bottom:none;}
+
+  /* ---------- REPORTS ---------- */
+  form.report{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:24px;
+    margin-top:16px;
+  }
+  form.report label{
+    display:block;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink-soft);
+    margin:14px 0 6px;
+  }
+  form.report label:first-child{margin-top:0;}
+  form.report input,form.report select,form.report textarea{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    padding:9px 10px;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+  }
+  form.report textarea{resize:vertical; min-height:90px;}
+  form.report button{
+    margin-top:20px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:11px 22px;
+    border:none;
+    border-radius:3px;
+    background:var(--rust);
+    color:#fff;
+    cursor:pointer;
+  }
+  form.report button:hover{background:var(--rust-dark);}
+  .note{
+    font-size:12px;
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace;
+    margin-top:10px;
+  }
+
+  /* ---------- DOCUMENTS ---------- */
+  .doc-row{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 18px;
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    margin-bottom:10px;
+    text-decoration:none;
+  }
+  .doc-row .doc-icon{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--tab-docs);
+    border:1px solid var(--tab-docs);
+    border-radius:3px;
+    padding:3px 6px;
+    flex-shrink:0;
+  }
+  .doc-row .doc-name{font-weight:600; font-size:14px; color:var(--ink);}
+  .doc-row .doc-meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); margin-left:auto;}
+
+  /* ---------- DASHBOARD ---------- */
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:14px;
+    margin:20px 0 28px;
+  }
+  .stat{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:16px 18px;
+  }
+  .stat .label{font-family:'IBM Plex Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft);}
+  .stat .value{font-family:'Fraunces',serif; font-size:28px; font-weight:600; margin-top:4px;}
+  .bars{margin-top:8px;}
+  .bar-row{display:flex; align-items:center; gap:12px; margin-bottom:10px;}
+  .bar-row .name{width:110px; font-size:13px; color:var(--ink-soft); flex-shrink:0;}
+  .bar-track{flex:1; height:10px; background:var(--line); border-radius:5px; overflow:hidden;}
+  .bar-fill{height:100%; background:var(--moss);}
+  .bar-row .pct{width:36px; text-align:right; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+
+  /* ---------- EDIT MODE ---------- */
+  [contenteditable="true"]{
+    outline:1px dashed var(--line-strong);
+    outline-offset:2px;
+    border-radius:2px;
+    cursor:text;
+  }
+  [contenteditable="true"]:focus{
+    outline:1.5px dashed var(--rust);
+    background:#fffef8;
+  }
+  .edit-only{display:none;}
+  body.edit-mode .edit-only{display:inline-flex;}
+  body.edit-mode .edit-only.block{display:block;}
+  .remove-btn{
+    position:absolute;
+    top:6px; right:6px;
+    width:22px; height:22px;
+    align-items:center; justify-content:center;
+    background:#fff;
+    border:1px solid var(--rust);
+    color:var(--rust-dark);
+    border-radius:50%;
+    font-size:13px;
+    line-height:1;
+    cursor:pointer;
+    z-index:2;
+  }
+  .remove-btn:hover{background:var(--rust); color:#fff;}
+  .gallery-grid figure{position:relative;}
+  .activity{position:relative;}
+  .doc-row{position:relative;}
+  .add-item-btn{
+    margin-top:10px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:9px 14px;
+    border:1px dashed var(--line-strong);
+    border-radius:4px;
+    background:none;
+    color:var(--ink-soft);
+    cursor:pointer;
+    width:100%;
+    text-align:center;
+  }
+  .add-item-btn:hover{border-color:var(--rust); color:var(--rust-dark);}
+  .url-edit{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    padding:6px 8px;
+    border:1px dashed var(--line-strong);
+    border-radius:3px;
+    background:#fffef8;
+    color:var(--ink);
+    margin-top:6px;
+  }
+  .doc-row{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .doc-row .doc-open{
+    margin-left:auto;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--rust-dark);
+    text-decoration:none;
+    flex-shrink:0;
+  }
+  .doc-row .url-edit{flex:1 1 100%; margin-top:8px;}
+  .stat .value[contenteditable]{display:inline-block; min-width:24px;}
+  .bar-row .pct-input{
+    width:44px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    padding:3px 4px;
+    border:1px dashed var(--line-strong);
+    border-radius:3px;
+    text-align:right;
+  }
+  #edit-toolbar{
+    position:fixed;
+    bottom:20px; right:24px;
+    display:flex; gap:8px;
+    z-index:100;
+  }
+  #edit-toolbar button{
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    padding:11px 18px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,.18);
+  }
+  #edit-toggle-btn{background:var(--ink); color:var(--paper);}
+  #edit-toggle-btn:hover{background:var(--moss-dark);}
+  #edit-save-btn{background:var(--rust); color:#fff;}
+  #edit-save-btn:hover{background:var(--rust-dark);}
+  #edit-hint{
+    display:none;
+    position:fixed;
+    bottom:70px; right:24px;
+    max-width:260px;
+    background:var(--ink);
+    color:var(--paper);
+    font-size:12px;
+    line-height:1.5;
+    padding:10px 14px;
+    border-radius:6px;
+    z-index:100;
+  }
+  body.edit-mode #edit-hint{display:block;}
+
+  #edit-key-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(34,48,43,.55);
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    padding:24px;
+  }
+  #edit-key-overlay.open{display:flex;}
+  #edit-key-overlay .folder{max-width:340px; width:100%;}
+  #edit-key-overlay input[type=password]{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:15px;
+    padding:11px 12px;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#fff;
+    color:var(--ink);
+    margin:18px 0 10px;
+    letter-spacing:.1em;
+  }
+  #edit-key-overlay input[type=password]:focus{outline:none; border-color:var(--rust);}
+  #edit-key-overlay button{
+    width:100%;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:11px;
+    border:none;
+    border-radius:3px;
+    background:var(--ink);
+    color:var(--paper);
+    cursor:pointer;
+  }
+  #edit-key-overlay button:hover{background:var(--moss-dark);}
+  #edit-key-error{
+    font-size:13px;
+    color:var(--rust-dark);
+    min-height:18px;
+    margin-top:8px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  @media (max-width:720px){
+    .shell{flex-direction:column;}
+    nav.tabs{width:100%; display:flex; overflow-x:auto; padding:16px 0;}
+    nav.tabs .brand{display:none;}
+    .tab-btn{border-left:none; border-bottom:3px solid transparent; flex-shrink:0;}
+    .tab-btn.active{border-bottom-color:var(--dot,#888);}
+    main{padding:28px 20px;}
+  }
+</style>
+</head>
+<body>
+<datalist id="activity-code-list">
+  <option value="R1A1.1"></option>
+  <option value="R1A1.2"></option>
+  <option value="R1A1.3"></option>
+  <option value="R1A2.1"></option>
+  <option value="R1A2.2"></option>
+  <option value="R1A2.3"></option>
+  <option value="R1A2.4"></option>
+  <option value="R1A2.5"></option>
+  <option value="R1A2.6"></option>
+  <option value="R1A2.7"></option>
+  <option value="R1A2.8"></option>
+  <option value="R1A2.9"></option>
+  <option value="R1A2.10"></option>
+  <option value="R1A2.11"></option>
+  <option value="R1A3.1"></option>
+  <option value="R1A4.1"></option>
+  <option value="R1A4.2"></option>
+  <option value="R1A4.3"></option>
+  <option value="R1A4.4"></option>
+  <option value="R1A4.5"></option>
+  <option value="R1A4.6"></option>
+  <option value="R1A4.7"></option>
+  <option value="R1A4.8"></option>
+  <option value="R1A4.9"></option>
+  <option value="R1A4.10"></option>
+  <option value="R1A4.11"></option>
+  <option value="R1A4.12"></option>
+  <option value="R1A4.13"></option>
+  <option value="R1A4.14"></option>
+  <option value="R1A5.1"></option>
+  <option value="R1A5.2"></option>
+  <option value="R1A5.3"></option>
+  <option value="R2A1.1"></option>
+  <option value="R2A1.2"></option>
+  <option value="R2A1.3"></option>
+  <option value="R2A1.4"></option>
+  <option value="R2A1.5"></option>
+  <option value="R2A1.6"></option>
+  <option value="R2A1.7"></option>
+  <option value="R2A3.1"></option>
+  <option value="R2A3.2"></option>
+  <option value="R2A3.3"></option>
+  <option value="R2A3.4"></option>
+  <option value="R2A3.5"></option>
+  <option value="R2A3.6"></option>
+  <option value="R2A4.1"></option>
+  <option value="R2A4.2"></option>
+  <option value="R2A4.3"></option>
+  <option value="R2A4.4"></option>
+  <option value="R2A4.5"></option>
+  <option value="R2A4.6"></option>
+  <option value="R2A5.1"></option>
+  <option value="R2A5.2"></option>
+  <option value="R2A5.3"></option>
+  <option value="R2A5.4"></option>
+  <option value="R2A5.5"></option>
+  <option value="INC-1"></option>
+  <option value="INC-2"></option>
+  <option value="INC-3"></option>
+  <option value="INC-4"></option>
+  <option value="INC-5"></option>
+  <option value="INC-6"></option>
+  <option value="INC-7"></option>
+  <option value="INC-8"></option>
+  <option value="INC-9"></option>
+  <option value="INC-10"></option>
+  <option value="INC-11"></option>
+  <option value="INC-12"></option>
+  <option value="GEN-1"></option>
+  <option value="GEN-2"></option>
+  <option value="GEN-3"></option>
+  <option value="GEN-4"></option>
+  <option value="CLOSE-1"></option>
+  <option value="CLOSE-2"></option>
+  <option value="CLOSE-3"></option>
+</datalist>
+<datalist id="activity-name-list">
+  <option value="Conduct household survey through community volunteers to identify out-of-school and dropout children."></option>
+  <option value="Conduct technical/disability assessment and screening of identified children (minimum 3% disability target), referring complex cases to Humanity &amp; Inclusion (HI) under FIVDB&#x27;s MoU."></option>
+  <option value="Print placement/assessment and disability-screening tools."></option>
+  <option value="Provide monthly incentives to host-community teacher volunteers."></option>
+  <option value="Provide monthly incentives to refugee-community teacher volunteers."></option>
+  <option value="Distribute scholastic material kits (exercise books, ALP books, drawing books, pens, pencils, water bottle, erasers, sharpeners) to enrolled children, 2 shifts per CBLF."></option>
+  <option value="Distribute one school bag per enrolled child (one-time distribution)."></option>
+  <option value="Provide assistive devices and reasonable accommodation for children with disabilities (device cost only; assessment carried out by HI)."></option>
+  <option value="Provide the CBLF minimum package (floor mats, whiteboards, boxes, stationery, cleaning materials)."></option>
+  <option value="Install solar panels, lighting and fire extinguishers at all CBLFs."></option>
+  <option value="Cover ongoing CBLF maintenance costs."></option>
+  <option value="Produce and display IEC materials (safeguarding, child protection, PSHEA posters) at all CBLFs."></option>
+  <option value="Provide teacher kits (diary, pens, water bottle, teacher&#x27;s guide)."></option>
+  <option value="Provide teacher kits (bag and umbrella), annual distribution."></option>
+  <option value="Distribute standard MHM kits (reusable pads, underwear, laundry soap) to adolescent girls."></option>
+  <option value="Deliver the 5-day basic training for teaching volunteers (once every 2 years, TiCC-aligned, CBLF-based)."></option>
+  <option value="Deliver the 6-day subject-based (ALP curriculum) training for teaching volunteers."></option>
+  <option value="Deliver quarterly refresher training for project personnel and teaching volunteers within the CBLF."></option>
+  <option value="Deliver cascading training for teachers on PSS, gender, SRHR, CAAFAG and referral mechanisms."></option>
+  <option value="Deliver the 2-day cascade training on Protective Education Services for teaching volunteers."></option>
+  <option value="Deliver ToT on Gender-Responsive Pedagogy for Inclusive and Gender-Responsive Learning (staff)."></option>
+  <option value="Cascade the Gender-Responsive Pedagogy training from staff ToT to all teaching volunteers."></option>
+  <option value="Deliver ToT on Empowerment: Decision-Making and Resilience for Rohingya Women and Adolescent Girls (staff)."></option>
+  <option value="Cascade the Empowerment/Decision-Making/Resilience session from staff ToT to teaching volunteers."></option>
+  <option value="Hold quarterly Male Allyship and Community Leadership Circles for Gender Justice (camp-based, incl. SC)."></option>
+  <option value="Deliver ToT on Gender Equality in Education for field staff, facilitators and consortium partners."></option>
+  <option value="Cascade the Gender Equality in Education training from ToT to field staff/facilitators."></option>
+  <option value="Facilitate Adolescent Girls&#x27; Safe Circles for Leadership and Protection (per centre, peer group)."></option>
+  <option value="Hold monthly project progress/coordination meetings."></option>
+  <option value="Provide SEL storybooks to CBLFs to ensure a joyful learning environment."></option>
+  <option value="Hold bi-monthly CESG meetings (7-8 members per CESG, 1 CESG per 2 CBLFs)."></option>
+  <option value="Hold bi-monthly parent/caregiver engagement meetings (1 parent per enrolled child)."></option>
+  <option value="Identify and enhance the capacity of alternative-care family members (foster and kinship) for unaccompanied/separated children (UASC)."></option>
+  <option value="Provide case-management need-based and emergency support (NFIs) to children/families in active cases."></option>
+  <option value="Maintain functioning Case Management Offices (1 per camp)."></option>
+  <option value="Deliver case management services per the CPMS 7-step process (non-budgetary - covered by CM Officer/volunteer time)."></option>
+  <option value="Train para-social workers, volunteers and facilitators on referral pathways."></option>
+  <option value="Provide monthly incentives to case-management volunteers (2 per camp, all refugees) for identification and referral."></option>
+  <option value="Provide support-material kits (case-worker kits) for case-management service providers."></option>
+  <option value="Construct new MPCACs and refurbish existing MPCACs, including running costs."></option>
+  <option value="Roll out &#x27;I Support My Friend&#x27; (ISMF) at community level, including inception meeting and adolescent training."></option>
+  <option value="Deploy MPCAC facilitators (refugee volunteers, host-community volunteers, security guards) to run PSS/awareness sessions."></option>
+  <option value="Orient and engage proactive Men and Boys in GBV prevention and response (bi-weekly sessions)."></option>
+  <option value="Deliver community-led activities on CP and GBV issues (day/event observation)."></option>
+  <option value="Provide Dignity Kits and Menstrual and Hygiene Management (MHM) kit support to adolescent girls (CP side)."></option>
+  <option value="Deliver DRR &amp; Climate Resilience training for community leaders and volunteers."></option>
+  <option value="Deliver PALS sessions for parents and adolescents (10-14 sessions per group)."></option>
+  <option value="Form/reform CBCPCs and hold monthly/bi-monthly meetings (2 CBCPCs per camp, 17 members each)."></option>
+  <option value="Deliver 2-day CBCPC member training, twice yearly (2 CBCPCs/camp x 17 members x 4 camps)."></option>
+  <option value="Conduct child-protection risk mapping and develop community-led prevention/response/referral plans."></option>
+  <option value="Deliver Art for Awareness - Interactive Popular Theatre (IPT) and puppet shows for CP &amp; GBV behaviour change."></option>
+  <option value="Deliver capacity-enhancing training for other-sector staff (health, education, nutrition, WASH) on CP integration and case-referral systems."></option>
+  <option value="Hold quarterly coordination meetings with camp service providers (CiC and relevant stakeholders)."></option>
+  <option value="Enhance the capacity of implementing partners on CP and operations."></option>
+  <option value="Conduct quarterly joint field-monitoring visits with government officials (CiC office and other actors)."></option>
+  <option value="Hold a project inception workshop with relevant stakeholders at camp level."></option>
+  <option value="Recruit and onboard FIVDB Education and Child Protection staff (Education Officer, Education Assistant, Technical Coordinator–Protection, case workers, facilitators)."></option>
+  <option value="Coordinate FD7 government approval process with SC/PIB for FIVDB&#x27;s operational camps."></option>
+  <option value="Participate in project kick-off meeting and partnership review meetings (CP, Education) with PIB and SC."></option>
+  <option value="Adopt/contextualise SOPs (case management, referral pathway, safeguarding, MEAL tools) jointly with PIB."></option>
+  <option value="Conduct joint site verification and mapping of CBLF/GoLF and MPCAC locations with PIB."></option>
+  <option value="Support data collection for the baseline / KAP survey in FIVDB&#x27;s camps."></option>
+  <option value="Support preparation and submission of FD-6 documentation (distinct from the FD7 camp-access approval in INC-2)."></option>
+  <option value="Sign the FIVDB-PIB partnership/sub-agreement setting out roles, budget and reporting lines."></option>
+  <option value="Conduct staff orientation and induction (project kick-off) for newly recruited FIVDB staff."></option>
+  <option value="Participate in the project inception meeting with government stakeholders at union, upazila, district and national level."></option>
+  <option value="Participate in the SC-led consortium MEAL Plan workshop (2 days)."></option>
+  <option value="Participate in SC-led training on Accountability and Safeguarding for all FIVDB staff and volunteers."></option>
+  <option value="Attend regular coordination meetings with implementing partners (PIB, SC, JCF, BTS, PHD) and other stakeholders."></option>
+  <option value="Conduct a safeguarding and GBV risk assessment of any prospective site before it is selected/established as a CBLF, GoLF, MPCAC or other facility (venue safety, lighting, privacy, access routes, presence of known risks)."></option>
+  <option value="Conduct a safeguarding risk screening before any group activity, training, distribution or community event (adult-to-child ratios, presence of trusted adults, venue safety, transport/pick-up arrangements)."></option>
+  <option value="Ensure gender mainstreaming and EU Gender-Age Marker compliance across all FIVDB activities (gender-responsive design review of facilities and sessions, sex/age-disaggregated monitoring, gender-balanced staffing and participation)."></option>
+  <option value="Contribute to the national and local level lesson-learned workshop."></option>
+  <option value="Support the SC-led external final evaluation (data access, KIIs/FGDs, verification of final indicator values)."></option>
+  <option value="Contribute FIVDB content (photos, case/success stories, quotes) to the consortium&#x27;s video documentary and other visibility/media and printing products."></option>
+</datalist>
+
+
+<div id="gate">
+  <div class="folder">
+    <div class="stamp">restricted access</div>
+    <h1 style="font-size:22px;">Project file</h1>
+    <p style="margin-bottom:0;">Enter the access code to open this project's file.</p>
+    <input type="password" id="pw" placeholder="Access code" autocomplete="off">
+    <button onclick="tryUnlock()">Open file</button>
+    <div id="gate-error"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="shell">
+    <nav class="tabs">
+      <div class="brand">Surakkha<span>field file &middot; 2026</span></div>
+      <button class="tab-btn active" style="--dot:var(--tab-overview)" onclick="showTab('overview',this)"><span class="dot"></span>Overview</button>
+      <button class="tab-btn" style="--dot:var(--tab-gallery)" onclick="showTab('gallery',this)"><span class="dot"></span>Pictures</button>
+      <button class="tab-btn" style="--dot:var(--tab-activities)" onclick="showTab('activities',this)"><span class="dot"></span>Activities</button>
+      <button class="tab-btn" style="--dot:var(--tab-milestones)" onclick="showTab('milestones',this)"><span class="dot"></span>Milestones</button>
+      <button class="tab-btn" style="--dot:var(--tab-actlog)" onclick="showTab('actlog',this)"><span class="dot"></span>Activity log</button>
+      <button class="tab-btn" style="--dot:var(--tab-distlog)" onclick="showTab('distlog',this)"><span class="dot"></span>Distribution log</button>
+      <button class="tab-btn" style="--dot:var(--tab-reports)" onclick="showTab('reports',this)"><span class="dot"></span>Reporting form</button>
+      <button class="tab-btn" style="--dot:var(--tab-agenda)" onclick="showTab('agenda',this)"><span class="dot"></span>Event agenda</button>
+      <button class="tab-btn" style="--dot:var(--tab-docs)" onclick="showTab('docs',this)"><span class="dot"></span>Documents</button>
+      <button class="tab-btn" style="--dot:var(--tab-dashboard)" onclick="showTab('dashboard',this)"><span class="dot"></span>Dashboard</button>
+    </nav>
+
+    <main>
+
+      <section id="panel-overview" class="panel active">
+        <p class="eyebrow">Project overview</p>
+        <h1 class="editable">Surakkha</h1>
+        <p class="editable">Replace this paragraph with a description of the project: what it does, who it serves, and why it matters. Two to four sentences is usually enough for a reader to get oriented.</p>
+        <div class="meta-row">
+          <div class="meta-item">Location<b class="editable">Replace with district / area</b></div>
+          <div class="meta-item">Duration<b class="editable">Jan 2026 &ndash; Dec 2026</b></div>
+          <div class="meta-item">Lead partner<b class="editable">Replace with organisation</b></div>
+          <div class="meta-item">Beneficiaries<b class="editable">Replace with number</b></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;" class="editable">Objectives</h3>
+          <p style="margin:0;" class="editable">List the project's main objectives here &mdash; edit this text directly in the HTML file to describe what success looks like.</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;" class="editable">Background</h3>
+          <p style="margin:0;" class="editable">Add context on how the project started, the problem it addresses, and any relevant history.</p>
+        </div>
+      </section>
+
+      <section id="panel-gallery" class="panel">
+        <p class="eyebrow">Pictures</p>
+        <h1 class="editable">Project gallery</h1>
+        <p>Click <b>Edit content</b> below, then paste an image link into the URL box under any photo and type your own caption.</p>
+        <div class="gallery-grid" id="gallery-grid">
+          <figure>
+            <button class="remove-btn edit-only" onclick="removeItem(this,'figure')" title="Remove photo">&times;</button>
+            <img src="https://picsum.photos/seed/site1/400/300" alt="Placeholder project photo 1">
+            <figcaption class="editable">Caption &mdash; edit me</figcaption>
+            <input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest('figure').querySelector('img').src=this.value">
+          </figure>
+          <figure>
+            <button class="remove-btn edit-only" onclick="removeItem(this,'figure')" title="Remove photo">&times;</button>
+            <img src="https://picsum.photos/seed/site2/400/300" alt="Placeholder project photo 2">
+            <figcaption class="editable">Caption &mdash; edit me</figcaption>
+            <input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest('figure').querySelector('img').src=this.value">
+          </figure>
+          <figure>
+            <button class="remove-btn edit-only" onclick="removeItem(this,'figure')" title="Remove photo">&times;</button>
+            <img src="https://picsum.photos/seed/site3/400/300" alt="Placeholder project photo 3">
+            <figcaption class="editable">Caption &mdash; edit me</figcaption>
+            <input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest('figure').querySelector('img').src=this.value">
+          </figure>
+          <figure>
+            <button class="remove-btn edit-only" onclick="removeItem(this,'figure')" title="Remove photo">&times;</button>
+            <img src="https://picsum.photos/seed/site4/400/300" alt="Placeholder project photo 4">
+            <figcaption class="editable">Caption &mdash; edit me</figcaption>
+            <input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest('figure').querySelector('img').src=this.value">
+          </figure>
+          <figure>
+            <button class="remove-btn edit-only" onclick="removeItem(this,'figure')" title="Remove photo">&times;</button>
+            <img src="https://picsum.photos/seed/site5/400/300" alt="Placeholder project photo 5">
+            <figcaption class="editable">Caption &mdash; edit me</figcaption>
+            <input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest('figure').querySelector('img').src=this.value">
+          </figure>
+          <figure>
+            <button class="remove-btn edit-only" onclick="removeItem(this,'figure')" title="Remove photo">&times;</button>
+            <img src="https://picsum.photos/seed/site6/400/300" alt="Placeholder project photo 6">
+            <figcaption class="editable">Caption &mdash; edit me</figcaption>
+            <input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest('figure').querySelector('img').src=this.value">
+          </figure>
+        </div>
+        <button class="add-item-btn edit-only block" onclick="addGalleryItem()">+ Add photo</button>
+      </section>
+
+      <section id="panel-activities" class="panel">
+        <p class="eyebrow">Activities highlight</p>
+        <h1 class="editable">Recent activities</h1>
+        <p>Log each activity under its quarter and month, with its activity code, budgetary status and how many people it reached, split by sex and age. Codes and names match the FIVDB MEAL Plan &amp; IPTT &mdash; start typing in either box to see suggestions.</p>
+        <div class="quarter-legend">
+          <span>Q1 Jun&ndash;Aug 2026</span><span>Q2 Sep&ndash;Nov 2026</span><span>Q3 Dec 2026&ndash;Feb 2027</span><span>Q4 Mar&ndash;May 2027</span>
+          <span>Q5 Jun&ndash;Aug 2027</span><span>Q6 Sep&ndash;Nov 2027</span><span>Q7 Dec 2027&ndash;Feb 2028</span><span>Q8 Mar&ndash;May 2028</span>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table" id="activities-table">
+            <thead>
+              <tr>
+                <th>Quarter</th><th>Month</th><th>Activity name</th><th>Code</th><th>Budgetary status</th>
+                <th>Girls &lt;18</th><th>Boys &lt;18</th><th>Women 18+</th><th>Men 18+</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="activities-tbody"></tbody>
+          </table>
+        </div>
+        <button class="add-item-btn edit-only block" onclick="addActivityRow()">+ Add activity</button>
+      </section>
+
+      <section id="panel-milestones" class="panel">
+        <p class="eyebrow">Milestones</p>
+        <h1 class="editable">Key milestones &amp; what they mean</h1>
+        <p>Every FIVDB sub-activity with its expected completion window, so the team can see at a glance what's due when. Pulled from the MEAL Plan's Key Milestones sheet (Q1 = Jun&ndash;Aug 2026 through Q8 = Mar&ndash;May 2028).</p>
+        <input type="text" class="filter-input" id="milestone-filter" placeholder="Filter by code, milestone or responsible person..." oninput="filterTable('milestone-table','milestone-filter')">
+        <div class="table-scroll">
+          <table class="ref-table" id="milestone-table">
+            <thead><tr><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Code</th><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Milestone</th><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Expected completion</th><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Responsible</th></tr></thead>
+            <tbody>
+<tr class="group-row"><td colspan="4">Result 1: Adolescent girls and boys have sustained access to inclusive, quality learning opportunities in safe, protective, community-based learning facilities.</td></tr>
+<tr><td class="mono">R1A1.1</td><td>Conduct household survey through community volunteers to identify out-of-school and dropout children.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A1.2</td><td>Conduct technical/disability assessment and screening of identified children (minimum 3% disability target), referring complex cases to Humanity &amp; Inclusion (HI) under FIVDB&#x27;s MoU.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A1.3</td><td>Print placement/assessment and disability-screening tools.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.1</td><td>Provide monthly incentives to host-community teacher volunteers.</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.2</td><td>Provide monthly incentives to refugee-community teacher volunteers.</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.3</td><td>Distribute scholastic material kits (exercise books, ALP books, drawing books, pens, pencils, water bottle, erasers, sharpeners) to enrolled children, 2 shifts per CBLF.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.4</td><td>Distribute one school bag per enrolled child (one-time distribution).</td><td class="mono">Jun 2026 - Aug 2026</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.5</td><td>Provide assistive devices and reasonable accommodation for children with disabilities (device cost only; assessment carried out by HI).</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.6</td><td>Provide the CBLF minimum package (floor mats, whiteboards, boxes, stationery, cleaning materials).</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.7</td><td>Install solar panels, lighting and fire extinguishers at all CBLFs.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.8</td><td>Cover ongoing CBLF maintenance costs.</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.9</td><td>Produce and display IEC materials (safeguarding, child protection, PSHEA posters) at all CBLFs.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.10</td><td>Provide teacher kits (diary, pens, water bottle, teacher&#x27;s guide).</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A2.11</td><td>Provide teacher kits (bag and umbrella), annual distribution.</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A3.1</td><td>Distribute standard MHM kits (reusable pads, underwear, laundry soap) to adolescent girls.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.1</td><td>Deliver the 5-day basic training for teaching volunteers (once every 2 years, TiCC-aligned, CBLF-based).</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.2</td><td>Deliver the 6-day subject-based (ALP curriculum) training for teaching volunteers.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.3</td><td>Deliver quarterly refresher training for project personnel and teaching volunteers within the CBLF.</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.4</td><td>Deliver cascading training for teachers on PSS, gender, SRHR, CAAFAG and referral mechanisms.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.5</td><td>Deliver the 2-day cascade training on Protective Education Services for teaching volunteers.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.6</td><td>Deliver ToT on Gender-Responsive Pedagogy for Inclusive and Gender-Responsive Learning (staff).</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.7</td><td>Cascade the Gender-Responsive Pedagogy training from staff ToT to all teaching volunteers.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.8</td><td>Deliver ToT on Empowerment: Decision-Making and Resilience for Rohingya Women and Adolescent Girls (staff).</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.9</td><td>Cascade the Empowerment/Decision-Making/Resilience session from staff ToT to teaching volunteers.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.10</td><td>Hold quarterly Male Allyship and Community Leadership Circles for Gender Justice (camp-based, incl. SC).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R1A4.11</td><td>Deliver ToT on Gender Equality in Education for field staff, facilitators and consortium partners.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.12</td><td>Cascade the Gender Equality in Education training from ToT to field staff/facilitators.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.13</td><td>Facilitate Adolescent Girls&#x27; Safe Circles for Leadership and Protection (per centre, peer group).</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A4.14</td><td>Hold monthly project progress/coordination meetings.</td><td class="mono">Jun 2026 - May 2028</td><td>Project Manager</td></tr>
+<tr><td class="mono">R1A5.1</td><td>Provide SEL storybooks to CBLFs to ensure a joyful learning environment.</td><td class="mono">Jun 2026 - May 2027</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A5.2</td><td>Hold bi-monthly CESG meetings (7-8 members per CESG, 1 CESG per 2 CBLFs).</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr><td class="mono">R1A5.3</td><td>Hold bi-monthly parent/caregiver engagement meetings (1 parent per enrolled child).</td><td class="mono">Jun 2026 - May 2028</td><td>Education Officer</td></tr>
+<tr class="group-row"><td colspan="4">Result 2: Strengthened, inclusive child protection services prevent and respond to protection risks of girls, boys, women and men affected by the Rohingya crisis.</td></tr>
+<tr><td class="mono">R2A1.1</td><td>Identify and enhance the capacity of alternative-care family members (foster and kinship) for unaccompanied/separated children (UASC).</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A1.2</td><td>Provide case-management need-based and emergency support (NFIs) to children/families in active cases.</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A1.3</td><td>Maintain functioning Case Management Offices (1 per camp).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A1.4</td><td>Deliver case management services per the CPMS 7-step process (non-budgetary - covered by CM Officer/volunteer time).</td><td class="mono">Jun 2026 - May 2028</td><td>Case Management Officer</td></tr>
+<tr><td class="mono">R2A1.5</td><td>Train para-social workers, volunteers and facilitators on referral pathways.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A1.6</td><td>Provide monthly incentives to case-management volunteers (2 per camp, all refugees) for identification and referral.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A1.7</td><td>Provide support-material kits (case-worker kits) for case-management service providers.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A3.1</td><td>Construct new MPCACs and refurbish existing MPCACs, including running costs.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A3.2</td><td>Roll out &#x27;I Support My Friend&#x27; (ISMF) at community level, including inception meeting and adolescent training.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A3.3</td><td>Deploy MPCAC facilitators (refugee volunteers, host-community volunteers, security guards) to run PSS/awareness sessions.</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A3.4</td><td>Orient and engage proactive Men and Boys in GBV prevention and response (bi-weekly sessions).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A3.5</td><td>Deliver community-led activities on CP and GBV issues (day/event observation).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A3.6</td><td>Provide Dignity Kits and Menstrual and Hygiene Management (MHM) kit support to adolescent girls (CP side).</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A4.1</td><td>Deliver DRR &amp; Climate Resilience training for community leaders and volunteers.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A4.2</td><td>Deliver PALS sessions for parents and adolescents (10-14 sessions per group).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A4.3</td><td>Form/reform CBCPCs and hold monthly/bi-monthly meetings (2 CBCPCs per camp, 17 members each).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A4.4</td><td>Deliver 2-day CBCPC member training, twice yearly (2 CBCPCs/camp x 17 members x 4 camps).</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A4.5</td><td>Conduct child-protection risk mapping and develop community-led prevention/response/referral plans.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A4.6</td><td>Deliver Art for Awareness - Interactive Popular Theatre (IPT) and puppet shows for CP &amp; GBV behaviour change.</td><td class="mono">Jun 2026 - May 2028</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A5.1</td><td>Deliver capacity-enhancing training for other-sector staff (health, education, nutrition, WASH) on CP integration and case-referral systems.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A5.2</td><td>Hold quarterly coordination meetings with camp service providers (CiC and relevant stakeholders).</td><td class="mono">Jun 2026 - May 2028</td><td>Project Manager</td></tr>
+<tr><td class="mono">R2A5.3</td><td>Enhance the capacity of implementing partners on CP and operations.</td><td class="mono">Jun 2026 - May 2027</td><td>Technical Coordinator–Protection</td></tr>
+<tr><td class="mono">R2A5.4</td><td>Conduct quarterly joint field-monitoring visits with government officials (CiC office and other actors).</td><td class="mono">Jun 2026 - May 2028</td><td>Project Manager</td></tr>
+<tr><td class="mono">R2A5.5</td><td>Hold a project inception workshop with relevant stakeholders at camp level.</td><td class="mono">Jun 2026 - Aug 2026</td><td>Project Manager</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="margin-top:32px;">Indicator definitions &amp; clarifications</h3>
+        <p>What each indicator actually means and how it's calculated &mdash; straight from the Logframe, so the team reads it the same way every time.</p>
+        <input type="text" class="filter-input" id="definition-filter" placeholder="Filter by code or indicator..." oninput="filterTable('definition-table','definition-filter')">
+        <div class="table-scroll">
+          <table class="ref-table" id="definition-table">
+            <thead><tr><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Ref</th><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Indicator</th><th style="text-align:left;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line-strong);">Definition / clarification</th></tr></thead>
+            <tbody>
+<tr class="group-row"><td colspan="3">SO — Girls and boys, including the most vulnerable and children with disabilities, have safe and equitable access to quality, inclusive non-formal education and child protection services.</td></tr>
+<tr><td class="mono">SO.1</td><td>% of beneficiaries reporting that humanitarian assistance is delivered in a safe, accessible, accountable and participatory manner</td><td>Officially approved Logframe (Annex I) target.</td></tr>
+<tr><td class="mono">SO.2</td><td>% targeted girls and boys who are retained in education at the end of the action</td><td>Denominator = FIVDB&#x27;s 1,224 enrolled learners.</td></tr>
+<tr class="group-row"><td colspan="3">R1 — Adolescent girls and boys have sustained access to inclusive, quality learning opportunities in safe, protective, community-based learning facilities.</td></tr>
+<tr><td class="mono">R1.1</td><td>Number of targeted girls and boys enrolled in non-formal education services</td><td>816 girls + 408 boys across 51 CBLFs.</td></tr>
+<tr><td class="mono">R1.2</td><td>Number of learning spaces established or restored to minimum standards for safe learning</td><td>34 girls&#x27; + 17 boys&#x27; CBLFs across Camps 1W, 6, 21, 24.</td></tr>
+<tr><td class="mono">R1.3</td><td>Number of teachers provided with teaching aids/materials</td><td>51 refugee + 17 host.</td></tr>
+<tr><td class="mono">R1.4</td><td>Number of girls and boys provided with learning materials</td><td>Same 1,224 learners as R1.1.</td></tr>
+<tr><td class="mono">R1.5</td><td>Number of teachers/education personnel showing increased knowledge and teaching skills</td><td>100% of FIVDB&#x27;s own teachers targeted.</td></tr>
+<tr><td class="mono">R1.6</td><td>Number of students, teachers and other education personnel provided with psycho-social support services</td><td>68 teachers + 1,224 learners + 1,224 parents/caregivers.</td></tr>
+<tr><td class="mono">R1.7</td><td>Number of teachers and other education personnel showing increased knowledge and skills to address protection needs</td><td>FIVDB&#x27;s own teaching cohort.</td></tr>
+<tr><td class="mono">R1.8</td><td>Number of girls and boys referred to specialised services</td><td>~10% of 1,224 enrolled learners (projection).</td></tr>
+<tr><td class="mono">R1.9</td><td>% educational facilities carrying out environmental and climate friendly activities day-to-day</td><td>~33 of FIVDB&#x27;s 51 CBLFs.</td></tr>
+<tr class="group-row"><td colspan="3">R2 — Strengthened, inclusive child protection services prevent and respond to protection risks of girls, boys, women and men affected by the Rohingya crisis (FIVDB: Activities 1, 3, 4, 5).</td></tr>
+<tr><td class="mono">R2.1</td><td>(MANDATORY) % of children and caregivers whose urgent child protection needs/risks have been addressed</td><td>320 children in case management, 4 Case Management Offices.</td></tr>
+<tr><td class="mono">R2.2</td><td>% of CAAFAG who benefit from appropriate care and services</td><td>Within FIVDB&#x27;s caseload.</td></tr>
+<tr><td class="mono">R2.3</td><td>Average % knowledge increase amongst participants on the protection subject in focus</td><td>Pre-/post-test knowledge gain.</td></tr>
+<tr><td class="mono">R2.4</td><td>(MANDATORY) % of persons who receive appropriate PSS reporting improved wellbeing</td><td>6 MPCACs (4 new + 2 refurbished), PALS reaching 4,320 + 4,320.</td></tr>
+<tr><td class="mono">R2.5</td><td>% of caseworkers whose knowledge assessment score is at least 70%</td><td>Annual Case Worker Capacity Assessment.</td></tr>
+<tr><td class="mono">R2.Ref</td><td>(MANDATORY) Number of minimum standards for care for survivors achieved</td><td>SC-led overall (Activity 2); FIVDB&#x27;s role is referral-only. PLAN&#x27;s own sub-target is 12 (of 31 reviewed); SC&#x27;s separate target is 16.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="panel-actlog" class="panel">
+        <p class="eyebrow">Activity data log</p>
+        <h1 class="editable">Activity log</h1>
+        <p>One row per session/event actually conducted (not planned) &mdash; matches the MEAL Plan's Activity Data Log. Host = host-community participants; FDMN = Forcibly Displaced Myanmar Nationals (Rohingya refugee participants), split Girls &lt;18 / Boys &lt;18 / Female 18+ / Male 18+.</p>
+        <div class="table-scroll">
+          <table class="data-table" id="actlog-table">
+            <thead>
+              <tr>
+                <th>Code</th><th>Event / activity title</th><th>Camp</th><th>Event date</th><th>Budgetary</th>
+                <th colspan="4">Host</th><th colspan="4">FDMN</th><th>Total</th><th></th>
+              </tr>
+              <tr>
+                <th></th><th></th><th></th><th></th><th></th>
+                <th>Girls&lt;18</th><th>Boys&lt;18</th><th>Fem.18+</th><th>Male18+</th>
+                <th>Girls&lt;18</th><th>Boys&lt;18</th><th>Fem.18+</th><th>Male18+</th>
+                <th></th><th></th>
+              </tr>
+            </thead>
+            <tbody id="actlog-tbody"></tbody>
+          </table>
+        </div>
+        <button class="add-item-btn edit-only block" onclick="addActLogRow()">+ Add logged activity</button>
+      </section>
+
+      <section id="panel-distlog" class="panel">
+        <p class="eyebrow">Distribution log</p>
+        <h1 class="editable">Distribution log</h1>
+        <p>One row per item distributed per distribution event &mdash; matches the MEAL Plan's Distribution Log. Recipients split the same way: Host / FDMN, each by Girls &lt;18 / Boys &lt;18 / Female 18+ / Male 18+.</p>
+        <div class="table-scroll">
+          <table class="data-table" id="distlog-table">
+            <thead>
+              <tr>
+                <th>Code</th><th>Distribution title</th><th>Camp</th><th>Item</th><th>Qty distributed</th><th>Date</th>
+                <th colspan="4">Host</th><th colspan="4">FDMN</th><th>Total</th><th></th>
+              </tr>
+              <tr>
+                <th></th><th></th><th></th><th></th><th></th><th></th>
+                <th>Girls&lt;18</th><th>Boys&lt;18</th><th>Fem.18+</th><th>Male18+</th>
+                <th>Girls&lt;18</th><th>Boys&lt;18</th><th>Fem.18+</th><th>Male18+</th>
+                <th></th><th></th>
+              </tr>
+            </thead>
+            <tbody id="distlog-tbody"></tbody>
+          </table>
+        </div>
+        <button class="add-item-btn edit-only block" onclick="addDistLogRow()">+ Add distribution</button>
+      </section>
+
+      <section id="panel-reports" class="panel">
+        <p class="eyebrow">Reporting form</p>
+        <h1>SURAKKHA event / activity report</h1>
+        <p>Your own report form, kept exactly as you built it &mdash; with its own toolbar and Save, Print, PDF, and Word export buttons.</p>
+        <a class="doc-row" href="forms/SURAKKHA_Event_Report_Form.html" target="_blank" rel="noopener">
+          <span class="doc-icon">OPEN</span>
+          <span class="doc-name">SURAKKHA event / activity report form</span>
+          <span class="doc-meta">Opens in a new tab</span>
+        </a>
+        <p class="note" style="margin-top:14px;">This file lives at <code>forms/SURAKKHA_Event_Report_Form.html</code> next to <code>index.html</code>. Keep that folder structure when you upload the site to hosting, or this link will break.</p>
+      </section>
+
+      <section id="panel-agenda" class="panel">
+        <p class="eyebrow">Event agenda</p>
+        <h1>Event agenda builder</h1>
+        <p>Your agenda template, kept exactly as you built it &mdash; with its own toolbar for adding days, sessions, and exporting.</p>
+        <a class="doc-row" href="forms/Event_Agenda_Template.html" target="_blank" rel="noopener">
+          <span class="doc-icon">OPEN</span>
+          <span class="doc-name">Event agenda builder</span>
+          <span class="doc-meta">Opens in a new tab</span>
+        </a>
+        <p class="note" style="margin-top:14px;">This file lives at <code>forms/Event_Agenda_Template.html</code> next to <code>index.html</code>. Keep that folder structure when you upload the site to hosting, or this link will break.</p>
+      </section>
+
+      <section id="panel-docs" class="panel">
+        <p class="eyebrow">Documents</p>
+        <h1 class="editable">Project documents</h1>
+        <p>Since this is a free static site, files aren't stored here directly. Upload each document to a free host (Google Drive, Dropbox, OneDrive &mdash; set sharing to "anyone with the link"), then paste that link into the URL box below.</p>
+        <div id="docs-list">
+          <div class="doc-row">
+            <button class="remove-btn edit-only" onclick="removeItem(this,'.doc-row')" title="Remove document">&times;</button>
+            <span class="doc-icon">PDF</span>
+            <span class="doc-name editable">Project proposal</span>
+            <span class="doc-meta editable">Jan 2026</span>
+            <a class="doc-open" href="#" target="_blank" rel="noopener">Open &#8599;</a>
+            <input type="text" class="url-edit edit-only" placeholder="Paste document link here" onchange="this.closest('.doc-row').querySelector('.doc-open').href=this.value">
+          </div>
+          <div class="doc-row">
+            <button class="remove-btn edit-only" onclick="removeItem(this,'.doc-row')" title="Remove document">&times;</button>
+            <span class="doc-icon">XLS</span>
+            <span class="doc-name editable">Budget tracker</span>
+            <span class="doc-meta editable">Feb 2026</span>
+            <a class="doc-open" href="#" target="_blank" rel="noopener">Open &#8599;</a>
+            <input type="text" class="url-edit edit-only" placeholder="Paste document link here" onchange="this.closest('.doc-row').querySelector('.doc-open').href=this.value">
+          </div>
+          <div class="doc-row">
+            <button class="remove-btn edit-only" onclick="removeItem(this,'.doc-row')" title="Remove document">&times;</button>
+            <span class="doc-icon">DOC</span>
+            <span class="doc-name editable">Monthly report template</span>
+            <span class="doc-meta editable">Mar 2026</span>
+            <a class="doc-open" href="#" target="_blank" rel="noopener">Open &#8599;</a>
+            <input type="text" class="url-edit edit-only" placeholder="Paste document link here" onchange="this.closest('.doc-row').querySelector('.doc-open').href=this.value">
+          </div>
+          <div class="doc-row">
+            <button class="remove-btn edit-only" onclick="removeItem(this,'.doc-row')" title="Remove document">&times;</button>
+            <span class="doc-icon">XLSX</span>
+            <span class="doc-name editable">FIVDB MEAL Plan &amp; IPTT (source workbook)</span>
+            <span class="doc-meta editable">Reference &middot; activity codes, indicators, budget</span>
+            <a class="doc-open" href="data/FIVDB_MEAL_Plan_IPTT.xlsx" target="_blank" rel="noopener">Open &#8599;</a>
+            <input type="text" class="url-edit edit-only" placeholder="Paste document link here" onchange="this.closest('.doc-row').querySelector('.doc-open').href=this.value">
+          </div>
+        </div>
+        <button class="add-item-btn edit-only block" onclick="addDocument()">+ Add document</button>
+      </section>
+
+      <section id="panel-dashboard" class="panel">
+        <p class="eyebrow">Dashboard</p>
+        <h1 class="editable">Project at a glance</h1>
+        <div class="stat-grid">
+          <div class="stat"><div class="label editable">Activities logged</div><div class="value editable">24</div></div>
+          <div class="stat"><div class="label editable">Reports submitted</div><div class="value editable">18</div></div>
+          <div class="stat"><div class="label editable">Sites covered</div><div class="value editable">7</div></div>
+          <div class="stat"><div class="label editable">Completion</div><div class="value editable">62%</div></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:15px;" class="editable">Progress by activity type</h3>
+          <div class="bars">
+            <div class="bar-row"><div class="name editable">Site visits</div><div class="bar-track"><div class="bar-fill" style="width:80%;"></div></div><div class="pct">80%</div><input type="number" class="pct-input edit-only" min="0" max="100" value="80" onchange="updateBar(this)"></div>
+            <div class="bar-row"><div class="name editable">Trainings</div><div class="bar-track"><div class="bar-fill" style="width:55%;"></div></div><div class="pct">55%</div><input type="number" class="pct-input edit-only" min="0" max="100" value="55" onchange="updateBar(this)"></div>
+            <div class="bar-row"><div class="name editable">Distributions</div><div class="bar-track"><div class="bar-fill" style="width:40%;"></div></div><div class="pct">40%</div><input type="number" class="pct-input edit-only" min="0" max="100" value="40" onchange="updateBar(this)"></div>
+          </div>
+          <button class="add-item-btn edit-only block" onclick="addBar()">+ Add row</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:15px;">Reach by sex &amp; age &mdash; by quarter</h3>
+          <p style="margin:0 0 6px;">Totals automatically from every row logged on the Activities tab. Add activities there and this updates.</p>
+          <div class="legend-row">
+            <span><i class="girls"></i>Girls &lt;18</span>
+            <span><i class="boys"></i>Boys &lt;18</span>
+            <span><i class="women"></i>Women 18+</span>
+            <span><i class="men"></i>Men 18+</span>
+          </div>
+          <div id="quarter-bars"></div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:15px;">Reach by sex &amp; age &mdash; by month</h3>
+          <p style="margin:0 0 6px;">Same data, broken down by month within each quarter.</p>
+          <div class="table-scroll">
+            <table class="month-table">
+              <thead><tr><th>Quarter</th><th>Month</th><th>Girls &lt;18</th><th>Boys &lt;18</th><th>Women 18+</th><th>Men 18+</th><th>Total</th></tr></thead>
+              <tbody id="month-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="edit-hint">Editing on &mdash; click any text to change it, use the URL boxes for photos/links and use the +/&times; buttons to add or remove items. When you're done, press <b>Save &amp; download</b> and re-upload the downloaded file to your host to update the live site. (Editing needed a separate key from the site's access code.)</div>
+  <div id="edit-toolbar">
+    <button id="edit-save-btn" class="edit-only" onclick="saveSite()">&#8681; Save &amp; download</button>
+    <button id="edit-toggle-btn" onclick="requestEditToggle()">&#9998; Edit content</button>
+  </div>
+
+  <div id="edit-key-overlay">
+    <div class="folder">
+      <div class="stamp">edit access</div>
+      <h1 style="font-size:20px;">Enter edit key</h1>
+      <p style="margin-bottom:0;">Editing requires a separate key from the site's access code.</p>
+      <input type="password" id="edit-key-input" placeholder="Edit key" autocomplete="off">
+      <button onclick="tryEditUnlock()">Unlock editing</button>
+      <button style="background:none;color:var(--ink-soft);box-shadow:none;margin-top:8px;" onclick="closeEditKeyModal()">Cancel</button>
+      <div id="edit-key-error"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var ACCESS_CODE = "surakkha2026";
+
+  function tryUnlock(){
+    var input = document.getElementById('pw').value;
+    var err = document.getElementById('gate-error');
+    if(input === ACCESS_CODE){
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      recalcDashboard();
+    } else {
+      err.textContent = "Incorrect code. Try again.";
+    }
+  }
+  document.getElementById('pw').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') tryUnlock();
+  });
+
+  function showTab(name, btn){
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ---------- EDIT MODE ----------
+  var EDIT_ACCESS_CODE = "surakkha-edit2026";
+  var editUnlocked = false;
+
+  function requestEditToggle(){
+    var isOn = document.body.classList.contains('edit-mode');
+    if(isOn){
+      applyEditMode(false);
+      return;
+    }
+    if(editUnlocked){
+      applyEditMode(true);
+    } else {
+      openEditKeyModal();
+    }
+  }
+
+  function openEditKeyModal(){
+    document.getElementById('edit-key-overlay').classList.add('open');
+    document.getElementById('edit-key-error').textContent = '';
+    document.getElementById('edit-key-input').value = '';
+    document.getElementById('edit-key-input').focus();
+  }
+  function closeEditKeyModal(){
+    document.getElementById('edit-key-overlay').classList.remove('open');
+  }
+  function tryEditUnlock(){
+    var input = document.getElementById('edit-key-input').value;
+    if(input === EDIT_ACCESS_CODE){
+      editUnlocked = true;
+      closeEditKeyModal();
+      applyEditMode(true);
+    } else {
+      document.getElementById('edit-key-error').textContent = 'Incorrect edit key. Try again.';
+    }
+  }
+  document.getElementById('edit-key-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter') tryEditUnlock();
+  });
+
+  function applyEditMode(on){
+    if(on){ document.body.classList.add('edit-mode'); } else { document.body.classList.remove('edit-mode'); }
+    document.querySelectorAll('.editable').forEach(function(el){
+      el.setAttribute('contenteditable', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('#activities-tbody input, #activities-tbody select, #actlog-tbody input, #actlog-tbody select, #distlog-tbody input, #distlog-tbody select').forEach(function(el){
+      el.disabled = !on;
+    });
+    document.getElementById('edit-toggle-btn').textContent = on ? '\u2715 Exit edit mode' : '\u270E Edit content';
+  }
+
+  function removeItem(btn, selector){
+    var item = btn.closest(selector);
+    if(item) item.remove();
+  }
+
+  function addGalleryItem(){
+    var grid = document.getElementById('gallery-grid');
+    var fig = document.createElement('figure');
+    fig.innerHTML = '<button class="remove-btn edit-only" onclick="removeItem(this,\'figure\')" title="Remove photo">&times;</button>' +
+      '<img src="https://picsum.photos/seed/new' + Date.now() + '/400/300" alt="New project photo">' +
+      '<figcaption class="editable" contenteditable="true">Caption &mdash; edit me</figcaption>' +
+      '<input type="text" class="url-edit edit-only" placeholder="Paste image URL here" onchange="this.closest(\'figure\').querySelector(\'img\').src=this.value">';
+    grid.appendChild(fig);
+  }
+
+  function addDocument(){
+    var list = document.getElementById('docs-list');
+    var div = document.createElement('div');
+    div.className = 'doc-row';
+    div.innerHTML = '<button class="remove-btn edit-only" onclick="removeItem(this,\'.doc-row\')" title="Remove document">&times;</button>' +
+      '<span class="doc-icon">DOC</span>' +
+      '<span class="doc-name editable" contenteditable="true">Document name</span>' +
+      '<span class="doc-meta editable" contenteditable="true">Month 2026</span>' +
+      '<a class="doc-open" href="#" target="_blank" rel="noopener">Open &#8599;</a>' +
+      '<input type="text" class="url-edit edit-only" placeholder="Paste document link here" onchange="this.closest(\'.doc-row\').querySelector(\'.doc-open\').href=this.value">';
+    list.appendChild(div);
+  }
+
+  function addBar(){
+    var bars = document.querySelector('.bars');
+    var div = document.createElement('div');
+    div.className = 'bar-row';
+    div.innerHTML = '<div class="name editable" contenteditable="true">New item</div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:50%;"></div></div>' +
+      '<div class="pct">50%</div>' +
+      '<input type="number" class="pct-input edit-only" min="0" max="100" value="50" onchange="updateBar(this)">';
+    bars.appendChild(div);
+  }
+
+  function updateBar(input){
+    var val = Math.max(0, Math.min(100, Number(input.value) || 0));
+    var row = input.closest('.bar-row');
+    row.querySelector('.bar-fill').style.width = val + '%';
+    row.querySelector('.pct').textContent = val + '%';
+    input.value = val;
+  }
+
+  // ---------- ACTIVITIES TABLE (quarter / month wise) ----------
+  var QUARTER_MONTHS = {
+    Q1: ['Jun 2026','Jul 2026','Aug 2026'],
+    Q2: ['Sep 2026','Oct 2026','Nov 2026'],
+    Q3: ['Dec 2026','Jan 2027','Feb 2027'],
+    Q4: ['Mar 2027','Apr 2027','May 2027'],
+    Q5: ['Jun 2027','Jul 2027','Aug 2027'],
+    Q6: ['Sep 2027','Oct 2027','Nov 2027'],
+    Q7: ['Dec 2027','Jan 2028','Feb 2028'],
+    Q8: ['Mar 2028','Apr 2028','May 2028']
+  };
+  var BUDGET_STATUSES = ['On Track','Underspend Risk','Overspend Risk','Not yet started'];
+
+  function monthOptionsHtml(quarter, selectedMonth){
+    var months = QUARTER_MONTHS[quarter] || [];
+    return months.map(function(m){
+      return '<option value="' + m + '"' + (m === selectedMonth ? ' selected' : '') + '>' + m + '</option>';
+    }).join('');
+  }
+  function quarterOptionsHtml(selectedQuarter){
+    return Object.keys(QUARTER_MONTHS).map(function(q){
+      return '<option value="' + q + '"' + (q === selectedQuarter ? ' selected' : '') + '>' + q + '</option>';
+    }).join('');
+  }
+  function budgetOptionsHtml(selected){
+    return BUDGET_STATUSES.map(function(s){
+      return '<option value="' + s + '"' + (s === selected ? ' selected' : '') + '>' + s + '</option>';
+    }).join('');
+  }
+
+  function buildActivityRow(vals){
+    vals = vals || {};
+    var tr = document.createElement('tr');
+    var quarter = vals.quarter || 'Q1';
+    tr.innerHTML =
+      '<td><select class="q-select" onchange="onQuarterChange(this)" disabled>' + quarterOptionsHtml(quarter) + '</select></td>' +
+      '<td><select class="m-select" disabled>' + monthOptionsHtml(quarter, vals.month) + '</select></td>' +
+      '<td><input type="text" list="activity-name-list" value="' + (vals.name || '') + '" placeholder="Activity name" disabled></td>' +
+      '<td><input type="text" list="activity-code-list" value="' + (vals.code || '') + '" placeholder="e.g. R1A2.3" disabled></td>' +
+      '<td><select class="b-select" disabled>' + budgetOptionsHtml(vals.budget || 'On Track') + '</select></td>' +
+      '<td><input type="number" min="0" value="' + (vals.girls || 0) + '" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.boys || 0) + '" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.women || 0) + '" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.men || 0) + '" disabled></td>' +
+      '<td><button class="remove-btn edit-only" style="position:static;" onclick="removeActivityRow(this)" title="Remove">&times;</button></td>';
+    return tr;
+  }
+
+  function onQuarterChange(sel){
+    var tr = sel.closest('tr');
+    var mSelect = tr.querySelector('.m-select');
+    mSelect.innerHTML = monthOptionsHtml(sel.value, null);
+    recalcDashboard();
+  }
+
+  function addActivityRow(){
+    var tbody = document.getElementById('activities-tbody');
+    var tr = buildActivityRow({quarter:'Q1', month:'Jun 2026', budget:'On Track'});
+    tbody.appendChild(tr);
+    if(document.body.classList.contains('edit-mode')){
+      tr.querySelectorAll('input, select').forEach(function(el){ el.disabled = false; });
+    }
+    recalcDashboard();
+  }
+
+  function removeActivityRow(btn){
+    var tr = btn.closest('tr');
+    if(tr) tr.remove();
+    recalcDashboard();
+  }
+
+  function seedActivitiesTable(){
+    var tbody = document.getElementById('activities-tbody');
+    var seed = [
+      {quarter:'Q1', month:'Jun 2026', name:'Conduct household survey through community volunteers to identify out-of-school and dropout children.', code:'R1A1.1', budget:'On Track', girls:0, boys:0, women:0, men:0},
+      {quarter:'Q1', month:'Jul 2026', name:'Distribute scholastic material kits to enrolled children.', code:'R1A2.3', budget:'Not yet started', girls:0, boys:0, women:0, men:0},
+      {quarter:'Q2', month:'Sep 2026', name:'Hold bi-monthly parent/caregiver engagement meetings.', code:'R1A5.3', budget:'Not yet started', girls:0, boys:0, women:0, men:0}
+    ];
+    seed.forEach(function(v){ tbody.appendChild(buildActivityRow(v)); });
+  }
+
+  // ---------- DASHBOARD: sex-segregated aggregation ----------
+  function readActivityRows(){
+    var rows = [];
+    document.querySelectorAll('#activities-tbody tr').forEach(function(tr){
+      var q = tr.querySelector('.q-select').value;
+      var m = tr.querySelector('.m-select').value;
+      var nums = tr.querySelectorAll('input[type=number]');
+      rows.push({
+        quarter: q,
+        month: m,
+        girls: Number(nums[0].value) || 0,
+        boys: Number(nums[1].value) || 0,
+        women: Number(nums[2].value) || 0,
+        men: Number(nums[3].value) || 0
+      });
+    });
+    return rows;
+  }
+
+  function recalcDashboard(){
+    var rows = readActivityRows();
+    var quarterTotals = {};
+    var monthTotals = {};
+    Object.keys(QUARTER_MONTHS).forEach(function(q){ quarterTotals[q] = {girls:0, boys:0, women:0, men:0}; });
+    rows.forEach(function(r){
+      if(!quarterTotals[r.quarter]) quarterTotals[r.quarter] = {girls:0, boys:0, women:0, men:0};
+      quarterTotals[r.quarter].girls += r.girls;
+      quarterTotals[r.quarter].boys += r.boys;
+      quarterTotals[r.quarter].women += r.women;
+      quarterTotals[r.quarter].men += r.men;
+
+      var key = r.quarter + '|' + r.month;
+      if(!monthTotals[key]) monthTotals[key] = {quarter:r.quarter, month:r.month, girls:0, boys:0, women:0, men:0};
+      monthTotals[key].girls += r.girls;
+      monthTotals[key].boys += r.boys;
+      monthTotals[key].women += r.women;
+      monthTotals[key].men += r.men;
+    });
+
+    var maxTotal = 1;
+    Object.keys(quarterTotals).forEach(function(q){
+      var t = quarterTotals[q];
+      var sum = t.girls + t.boys + t.women + t.men;
+      if(sum > maxTotal) maxTotal = sum;
+    });
+
+    var barsHtml = '';
+    Object.keys(QUARTER_MONTHS).forEach(function(q){
+      var t = quarterTotals[q];
+      var sum = t.girls + t.boys + t.women + t.men;
+      var scale = sum > 0 ? (sum / maxTotal) * 100 : 0;
+      barsHtml += '<div class="qbar-row"><div class="qlabel">' + q + '</div>' +
+        '<div class="qbar-track" style="width:' + Math.max(scale, sum > 0 ? 4 : 0) + '%;min-width:' + (sum>0?'40px':'0') + ';flex:none;">' +
+        segHtml(t.girls, sum, 'girls') + segHtml(t.boys, sum, 'boys') + segHtml(t.women, sum, 'women') + segHtml(t.men, sum, 'men') +
+        '</div><div class="qtotal">' + sum + '</div></div>';
+    });
+    document.getElementById('quarter-bars').innerHTML = barsHtml || '<p class="note">No activities logged yet.</p>';
+
+    var monthKeys = Object.keys(monthTotals).sort(function(a,b){
+      var qa = Number(a.split('|')[0].replace('Q','')), qb = Number(b.split('|')[0].replace('Q',''));
+      return qa - qb;
+    });
+    var rowsHtml = monthKeys.map(function(k){
+      var t = monthTotals[k];
+      var sum = t.girls + t.boys + t.women + t.men;
+      return '<tr><td>' + t.quarter + '</td><td>' + t.month + '</td><td>' + t.girls + '</td><td>' + t.boys + '</td><td>' + t.women + '</td><td>' + t.men + '</td><td>' + sum + '</td></tr>';
+    }).join('');
+    document.getElementById('month-table-body').innerHTML = rowsHtml || '<tr><td colspan="7" class="note" style="padding:10px 8px;">No activities logged yet.</td></tr>';
+  }
+
+  function segHtml(count, sum, cls){
+    if(!count || !sum) return '';
+    var pct = (count / sum) * 100;
+    return '<div class="qbar-seg ' + cls + '" style="width:' + pct + '%;" title="' + cls + ': ' + count + '"></div>';
+  }
+
+  // recalc whenever any activities-table field changes
+  document.addEventListener('input', function(e){
+    if(e.target.closest && e.target.closest('#activities-tbody')) recalcDashboard();
+  });
+  document.addEventListener('change', function(e){
+    if(e.target.closest && e.target.closest('#activities-tbody')) recalcDashboard();
+  });
+
+  // ---------- REFERENCE TABLE FILTER ----------
+  function filterTable(tableId, inputId){
+    var q = document.getElementById(inputId).value.toLowerCase();
+    var rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+    rows.forEach(function(tr){
+      if(tr.classList.contains('group-row')){ tr.style.display = ''; return; }
+      var text = tr.textContent.toLowerCase();
+      tr.style.display = text.indexOf(q) === -1 ? 'none' : '';
+    });
+  }
+
+  // ---------- ACTIVITY LOG / DISTRIBUTION LOG ----------
+  var CAMPS = ['Camp 1W','Camp 6','Camp 21','Camp 24'];
+  function campOptionsHtml(selected){
+    return CAMPS.map(function(c){ return '<option value="' + c + '"' + (c===selected?' selected':'') + '>' + c + '</option>'; }).join('');
+  }
+  function budgetaryOptionsHtml(selected){
+    return ['Budgetary','Non-budgetary'].map(function(b){ return '<option value="' + b + '"' + (b===selected?' selected':'') + '>' + b + '</option>'; }).join('');
+  }
+
+  function buildActLogRow(vals){
+    vals = vals || {};
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input type="text" list="activity-code-list" value="' + (vals.code||'') + '" placeholder="Code" disabled></td>' +
+      '<td><input type="text" value="' + (vals.title||'') + '" placeholder="Event title" disabled></td>' +
+      '<td><select disabled>' + campOptionsHtml(vals.camp) + '</select></td>' +
+      '<td><input type="date" value="' + (vals.date||'') + '" disabled></td>' +
+      '<td><select disabled>' + budgetaryOptionsHtml(vals.budgetary || 'Budgetary') + '</select></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hg||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hb||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hf||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hm||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.fg||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.fb||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.ff||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.fm||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td class="log-total">0</td>' +
+      '<td><button class="remove-btn edit-only" style="position:static;" onclick="removeItem(this,\'tr\')" title="Remove">&times;</button></td>';
+    recalcLogRowTotal(tr.querySelector('input[type=number]'));
+    return tr;
+  }
+
+  function buildDistLogRow(vals){
+    vals = vals || {};
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><input type="text" list="activity-code-list" value="' + (vals.code||'') + '" placeholder="Code" disabled></td>' +
+      '<td><input type="text" value="' + (vals.title||'') + '" placeholder="Distribution title" disabled></td>' +
+      '<td><select disabled>' + campOptionsHtml(vals.camp) + '</select></td>' +
+      '<td><input type="text" value="' + (vals.item||'') + '" placeholder="Item" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.qty||0) + '" disabled></td>' +
+      '<td><input type="date" value="' + (vals.date||'') + '" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hg||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hb||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hf||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.hm||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.fg||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.fb||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.ff||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td><input type="number" min="0" value="' + (vals.fm||0) + '" oninput="recalcLogRowTotal(this)" disabled></td>' +
+      '<td class="log-total">0</td>' +
+      '<td><button class="remove-btn edit-only" style="position:static;" onclick="removeItem(this,\'tr\')" title="Remove">&times;</button></td>';
+    recalcLogRowTotal(tr.querySelector('input[type=number]'));
+    return tr;
+  }
+
+  function recalcLogRowTotal(el){
+    var tr = el.closest('tr');
+    var nums = tr.querySelectorAll('input[type=number]');
+    var sum = 0;
+    nums.forEach(function(n){ sum += Number(n.value) || 0; });
+    tr.querySelector('.log-total').textContent = sum;
+  }
+
+  function addActLogRow(){
+    var tbody = document.getElementById('actlog-tbody');
+    var tr = buildActLogRow({camp:'Camp 1W'});
+    tbody.appendChild(tr);
+    if(document.body.classList.contains('edit-mode')) tr.querySelectorAll('input, select').forEach(function(el){ el.disabled = false; });
+  }
+  function addDistLogRow(){
+    var tbody = document.getElementById('distlog-tbody');
+    var tr = buildDistLogRow({camp:'Camp 1W'});
+    tbody.appendChild(tr);
+    if(document.body.classList.contains('edit-mode')) tr.querySelectorAll('input, select').forEach(function(el){ el.disabled = false; });
+  }
+
+  if(document.getElementById('actlog-tbody').children.length === 0) addActLogRow();
+  if(document.getElementById('distlog-tbody').children.length === 0) addDistLogRow();
+  if(document.getElementById('activities-tbody').children.length === 0) seedActivitiesTable();
+
+  // ---------- SAVE & DOWNLOAD ----------
+  function syncLiveValuesToAttributes(root){
+    // inputs/selects only reflect typed/selected values via live DOM properties,
+    // not HTML attributes -- sync them so cloneNode + outerHTML captures current state.
+    root.querySelectorAll('input').forEach(function(el){
+      if(el.type === 'checkbox' || el.type === 'radio'){
+        if(el.checked) el.setAttribute('checked',''); else el.removeAttribute('checked');
+      } else {
+        el.setAttribute('value', el.value);
+      }
+    });
+    root.querySelectorAll('select').forEach(function(sel){
+      Array.from(sel.options).forEach(function(opt){
+        if(opt.value === sel.value) opt.setAttribute('selected',''); else opt.removeAttribute('selected');
+      });
+    });
+    root.querySelectorAll('textarea').forEach(function(ta){
+      ta.textContent = ta.value;
+    });
+  }
+
+  function saveSite(){
+    syncLiveValuesToAttributes(document);
+
+    var clone = document.documentElement.cloneNode(true);
+    clone.querySelector('body').classList.remove('edit-mode');
+    clone.querySelectorAll('[contenteditable]').forEach(function(el){ el.removeAttribute('contenteditable'); });
+    clone.querySelectorAll('#activities-tbody input, #activities-tbody select, #actlog-tbody input, #actlog-tbody select, #distlog-tbody input, #distlog-tbody select').forEach(function(el){ el.setAttribute('disabled',''); });
+    var gate = clone.querySelector('#gate');
+    if(gate) gate.removeAttribute('style');
+    var app = clone.querySelector('#app');
+    if(app) app.style.display = 'none';
+    var pwField = clone.querySelector('#pw');
+    if(pwField) pwField.setAttribute('value', '');
+    var err = clone.querySelector('#gate-error');
+    if(err) err.textContent = '';
+    var editOverlay = clone.querySelector('#edit-key-overlay');
+    if(editOverlay) editOverlay.classList.remove('open');
+    var editKeyInput = clone.querySelector('#edit-key-input');
+    if(editKeyInput) editKeyInput.setAttribute('value', '');
+    var editKeyErr = clone.querySelector('#edit-key-error');
+    if(editKeyErr) editKeyErr.textContent = '';
+    clone.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    var firstPanel = clone.querySelector('.panel');
+    if(firstPanel) firstPanel.classList.add('active');
+    clone.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    var firstTab = clone.querySelector('.tab-btn');
+    if(firstTab) firstTab.classList.add('active');
+
+    var html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    var blob = new Blob([html], { type: 'text/html' });
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'index.html';
+    link.click();
+  }
+
+</script>
+
+</body>
+</html>
