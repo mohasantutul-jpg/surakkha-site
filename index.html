@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SURAKKHA · Document Templates — FIVDB</title>
+<meta name="description" content="Fill-in-browser document templates for the SURAKKHA project — export straight to PDF or Word, no installs required.">
+<style>
+  :root{
+    --ink:#262626;
+    --muted:#6B6A62;
+    --line:#C9C5B7;
+    --manila:#F0E6CC;
+    --manila-dark:#E4D6AE;
+    --steel:#4B564E;
+    --steel-dark:#333B36;
+    --steel-light:#5E6A62;
+    --floor:#DAD7CC;
+    --teal:#2E7D6B;
+    --blue:#0072CE;
+    --amber:#C97B1D;
+    --plum:#6B4C8A;
+    --slate:#45586B;
+    --stamp:#A5402F;
+    --focus:#0072CE;
+    --serif:"Times New Roman", Georgia, "Noto Serif", serif;
+    --sans:"Helvetica Neue", Arial, sans-serif;
+    --mono:"JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--floor); color:var(--ink);
+    font-family:var(--sans); line-height:1.5;
+    background-image:repeating-linear-gradient(135deg, rgba(0,0,0,.02) 0px, rgba(0,0,0,.02) 1px, transparent 1px, transparent 26px);
+  }
+  a{color:var(--steel-dark);}
+  .skip-link{
+    position:absolute; left:-999px; top:0; background:var(--steel-dark); color:#fff;
+    padding:10px 16px; z-index:100; font-family:var(--sans); font-size:13px; border-radius:0 0 6px 0;
+  }
+  .skip-link:focus{left:0;}
+  :focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  .wrap{max-width:900px; margin:0 auto; padding:0 22px;}
+
+  header.masthead{padding:34px 0 20px;}
+  .masthead-row{display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap;}
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--teal); font-weight:700;
+  }
+  h1{
+    font-family:var(--serif); font-weight:700; font-size:clamp(26px,4vw,36px);
+    margin:8px 0 6px; color:var(--steel-dark); letter-spacing:.01em;
+  }
+  .org-line{font-family:var(--serif); font-style:italic; font-size:15px; color:var(--muted);}
+  .proj-code{
+    font-family:var(--mono); font-size:11.5px; color:var(--muted); text-align:right;
+    border:1px solid var(--line); padding:7px 11px; background:var(--manila);
+  }
+  .proj-code strong{display:block; color:var(--ink); font-size:12px; margin-bottom:2px;}
+  .lede{max-width:60ch; font-size:15px; color:var(--muted); margin:18px 0 0;}
+
+  .a11y-strip{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 0; padding:0; list-style:none;}
+  .a11y-strip li{
+    font-family:var(--mono); font-size:11px; color:var(--teal);
+    border:1px solid var(--teal); border-radius:3px; padding:4px 8px;
+    background:rgba(46,125,107,.07); display:flex; align-items:center; gap:5px;
+  }
+  .a11y-strip li svg{width:11px; height:11px; flex:none;}
+
+  .search-row{margin:24px 0 30px;}
+  .search-row label{
+    display:block; font-family:var(--mono); font-size:11px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--muted); margin-bottom:6px;
+  }
+  .search-row input{
+    width:100%; font:inherit; font-size:15px; padding:12px 14px;
+    border:1px solid var(--steel); background:#fff; color:var(--ink);
+    font-family:var(--sans);
+  }
+  .search-row input:focus{outline:none; border-color:var(--focus); box-shadow:0 0 0 3px rgba(0,114,206,.18);}
+
+  /* ---- Cabinet ---- */
+  .cabinet{
+    background:linear-gradient(180deg, var(--steel-light) 0%, var(--steel) 6%, var(--steel-dark) 100%);
+    border-radius:3px 3px 0 0;
+    padding:0;
+    box-shadow:0 14px 30px rgba(0,0,0,.22);
+    position:relative;
+  }
+  .cabinet-plate{
+    text-align:center; padding:14px 10px 12px;
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#D9D6C8; border-bottom:2px solid rgba(0,0,0,.35);
+  }
+  .cabinet-legs{
+    height:14px; background:var(--steel-dark); border-radius:0 0 2px 2px;
+    box-shadow:0 4px 8px rgba(0,0,0,.3);
+    margin-bottom:34px;
+  }
+
+  .drawer{border-bottom:1px solid rgba(0,0,0,.3);}
+  .drawer:last-of-type{border-bottom:none;}
+
+  .drawer-face{
+    width:100%; text-align:left; border:none; cursor:pointer;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12));
+    padding:16px 20px; display:flex; align-items:center; gap:16px;
+    font-family:inherit; color:#EFEDE2;
+    transition:background .12s;
+  }
+  .drawer-face:hover{background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(0,0,0,.14));}
+  .drawer-face:active{transform:translateY(1px);}
+
+  .drawer-num{
+    font-family:var(--mono); font-size:10.5px; color:rgba(239,237,226,.55);
+    border:1px solid rgba(239,237,226,.35); border-radius:2px; padding:3px 6px; flex:none;
+  }
+  .drawer-handle{
+    width:52px; height:9px; border-radius:5px; flex:none;
+    background:linear-gradient(180deg, #C9C5B7, #8A8879);
+    box-shadow:0 1px 2px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .drawer-title{
+    font-family:var(--serif); font-size:17px; font-weight:700; flex:1;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  .drawer-title .dot{
+    width:9px; height:9px; border-radius:50%; flex:none; background:var(--drawer-accent, var(--teal));
+    box-shadow:0 0 0 2px rgba(255,255,255,.15);
+  }
+  .drawer-title .count{
+    font-family:var(--mono); font-size:11px; font-weight:400; color:rgba(239,237,226,.6);
+  }
+  .drawer-chevron{
+    font-size:14px; color:rgba(239,237,226,.7); flex:none; transition:transform .22s ease;
+  }
+  .drawer[data-open="true"] .drawer-chevron{transform:rotate(90deg);}
+
+  .drawer-tray{
+    overflow:hidden; max-height:0; opacity:0;
+    transition:max-height .32s ease, opacity .28s ease;
+    background:var(--manila);
+  }
+  .drawer[data-open="true"] .drawer-tray{opacity:1;}
+
+  .tray-inner{padding:20px; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+
+  .subdrawer{
+    grid-column:1/-1; border:1px solid var(--kraft-dark, var(--line)); background:rgba(0,0,0,.03);
+  }
+  .subdrawer-face{
+    width:100%; text-align:left; border:none; cursor:pointer; background:var(--manila-dark);
+    padding:11px 16px; display:flex; align-items:center; gap:10px;
+    font-family:var(--sans); color:var(--ink); font-weight:700; font-size:13px;
+    transition:background .12s;
+  }
+  .subdrawer-face:hover{background:#D8C795;}
+  .sub-chevron{font-size:11px; color:var(--muted); transition:transform .2s ease; flex:none;}
+  .subdrawer[data-open="true"] .sub-chevron{transform:rotate(90deg);}
+  .subdrawer-title{flex:1;}
+  .sub-count{font-family:var(--mono); font-size:10.5px; font-weight:400; color:var(--muted);}
+  .subdrawer-tray{overflow:hidden; max-height:0; transition:max-height .28s ease;}
+  .subtray-inner{padding:16px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; background:var(--manila);}
+  .subdrawer .folder{margin-top:0;}
+
+  .folder{
+    position:relative; background:#fff; border:1px solid var(--line);
+    padding:20px 18px 16px; display:flex; flex-direction:column; gap:10px;
+    margin-top:14px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .folder::before{
+    content:attr(data-tab); position:absolute; top:-14px; left:16px;
+    background:var(--manila-dark); border:1px solid var(--line); border-bottom:none;
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--steel-dark); padding:4px 9px 3px; border-radius:3px 3px 0 0;
+  }
+  .folder:hover, .folder:focus-within{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.14);
+  }
+  .folder h3{font-family:var(--serif); font-size:17px; margin:0; color:var(--ink); line-height:1.25;}
+  .folder p.desc{font-size:13px; color:var(--muted); margin:0;}
+  ul.badges{list-style:none; margin:2px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px;}
+  ul.badges li{
+    font-size:10px; color:var(--muted); background:#F3F2EC; border:1px solid var(--line);
+    border-radius:3px; padding:3px 7px;
+  }
+  .folder-footer{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px;}
+  .open-link{
+    font-family:var(--sans); font-weight:700; font-size:13px; text-decoration:none;
+    color:#fff; background:var(--drawer-accent, var(--teal)); padding:9px 15px;
+    display:inline-flex; align-items:center; gap:6px; border-radius:2px;
+    transition:filter .15s;
+  }
+  .open-link:hover{filter:brightness(1.12);}
+  .open-link svg{width:12px; height:12px;}
+  .updated{font-family:var(--mono); font-size:10px; color:var(--muted);}
+
+  .folder.empty{
+    align-items:center; justify-content:center; text-align:center; color:var(--muted);
+    border-style:dashed; background:transparent; box-shadow:none;
+  }
+  .folder.empty:hover{transform:none; box-shadow:none;}
+  .folder.empty p{font-family:var(--mono); font-size:12px; margin:0;}
+
+  /* ---- How it works ---- */
+  section.how{margin-top:56px; padding:26px 0 6px; border-top:1px solid var(--line);}
+  section.how h2{font-family:var(--serif); color:var(--steel-dark); font-size:19px; margin:0 0 18px;}
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px;}
+  .step .num{font-family:var(--mono); font-size:11px; color:var(--teal); font-weight:700;}
+  .step h3{font-family:var(--sans); font-size:14px; margin:6px 0 5px; color:var(--ink);}
+  .step p{font-size:13px; color:var(--muted); margin:0;}
+
+  footer{
+    margin-top:50px; border-top:3px solid var(--steel-dark); padding:20px 0 40px;
+    font-size:12px; color:var(--muted); font-family:var(--sans);
+  }
+  footer a{color:var(--steel-dark);}
+  .footer-row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  @media (max-width:600px){
+    .masthead-row{flex-direction:column; align-items:flex-start;}
+    .proj-code{text-align:left;}
+    .drawer-title{font-size:15px;}
+    .drawer-handle{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .folder, .drawer-tray, .drawer-chevron{transition:none;}
+    .folder:hover, .folder:focus-within{transform:none;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#cabinet">Skip to templates</a>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="masthead-row">
+      <div>
+        <div class="eyebrow">SURAKKHA Project · FIVDB</div>
+        <h1>Document Templates</h1>
+        <div class="org-line">Friends in Village Development Bangladesh</div>
+      </div>
+      <div class="proj-code">
+        <strong>DG ECHO 2026/00158</strong>
+        Internal reporting library
+      </div>
+    </div>
+    <p class="lede">Open a template, fill it in your browser, and export a print-ready PDF or Word file — no software to install and nothing you type leaves your device unless you choose to save a draft.</p>
+    <ul class="a11y-strip">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12h16M4 6h16M4 18h16"/></svg>Screen-reader labeled fields</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg>Full keyboard navigation</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Visible focus outlines</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9V4h12v5M6 18h12v-5H6v5z"/><rect x="6" y="14" width="12" height="7"/></svg>Print &amp; PDF ready</li>
+    </ul>
+  </header>
+
+  <div class="search-row">
+    <label for="searchInput">Find a template</label>
+    <input type="text" id="searchInput" placeholder="Try “agenda”, “attendance”, or a category like “MEAL”" autocomplete="off">
+  </div>
+
+  <div class="cabinet" id="cabinet">
+    <div class="cabinet-plate">SURAKKHA registry cabinet</div>
+    <div id="drawersHost"></div>
+  </div>
+  <div class="cabinet-legs"></div>
+
+  <section class="how" aria-labelledby="how-heading">
+    <h2 id="how-heading">How the templates work</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">01</div>
+        <h3>Open a drawer</h3>
+        <p>Pick a category above — a template opens straight in your browser, laid out as an A4 document.</p>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h3>Fill it in</h3>
+        <p>Type into the fields, add rows or photos where needed, and upload signatures.</p>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h3>Preview or print</h3>
+        <p>Use Print Preview to check page breaks, or the browser's own print option at any time.</p>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <h3>Export &amp; save</h3>
+        <p>Export a paginated PDF or Word file, and download a working copy to finish later.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-row">
+      <span>SURAKKHA PROJECT · DG ECHO 2026/00158 — FIVDB internal reporting templates</span>
+      <span>Support: <a href="mailto:mohasan.uddin@fivdb.org">mohasan.uddin@fivdb.org</a></span>
+    </div>
+  </footer>
+</div>
+
+<script>
+const CATEGORIES = [
+  { name: "Reporting & Documentation", accent: "var(--teal)" },
+  { name: "Human Resource & Attendance", accent: "var(--blue)" },
+  { name: "Data & Information Management", accent: "var(--plum)" },
+  { name: "Activity Management", accent: "var(--slate)" },
+  { name: "Communication Materials", accent: "var(--amber)" },
+  { name: "Accountability", accent: "var(--stamp)" }
+];
+
+const TEMPLATES = [
+  // ---- Reporting & Documentation ----
+  {
+    code: "SRK-RPT-01",
+    title: "Reporting Template",
+    category: "Reporting & Documentation",
+    subcategory: "Reporting Template",
+    description: "Use after any training, distribution, or field activity to record background, attendance, target vs. achievement, and sign-off.",
+    badges: ["Attendance table", "Photo annex", "Signatures"],
+    file: "surakkha-event-report.html",
+    updated: "2026"
+  },
+  {
+    title: "Field Observation Template",
+    category: "Reporting & Documentation",
+    subcategory: "Field Observation Template",
+    description: "For recording direct observations during a field or monitoring visit.",
+    placeholder: true
+  },
+  {
+    title: "Case Story Template",
+    category: "Reporting & Documentation",
+    subcategory: "Case Story Template",
+    description: "For documenting an individual beneficiary's experience in narrative form.",
+    placeholder: true
+  },
+  {
+    title: "Success Story Template",
+    category: "Reporting & Documentation",
+    subcategory: "Success Story Template",
+    description: "For write-ups of notable project outcomes, for donor or public communication.",
+    placeholder: true
+  },
+
+  // ---- Human Resource & Attendance ----
+  {
+    code: "SRK-ATT-01",
+    title: "Attendance Sheet",
+    category: "Human Resource & Attendance",
+    subcategory: "Attendance Sheet Template",
+    description: "Annex to the Reporting Template — record who attended, sex, role, organization, and photo consent for a standard field activity.",
+    badges: ["Photo consent", "Sex-disaggregated", "A4 landscape"],
+    file: "fivdb-attendance-sheet.html",
+    updated: "2026"
+  },
+  {
+    code: "SRK-ATT-02",
+    title: "Attendance Sheet — Camp",
+    category: "Human Resource & Attendance",
+    subcategory: "Attendance Sheet Template",
+    description: "Same as the standard attendance sheet, adapted for camp settings — records Progress ID instead of organization.",
+    badges: ["Photo consent", "Progress ID", "A4 landscape"],
+    file: "fivdb-attendance-sheet-camp.html",
+    updated: "2026"
+  },
+  {
+    title: "Master Roll Template",
+    category: "Human Resource & Attendance",
+    subcategory: "Master Roll Template",
+    description: "For staff or daily-labour payroll records, separate from event attendance.",
+    placeholder: true
+  },
+
+  // ---- Data & Information Management ----
+  {
+    title: "EMIS Reporting Channel",
+    category: "Data & Information Management",
+    subcategory: "EMIS Reporting Channel",
+    description: "Guidance and links for submitting data through the project's EMIS.",
+    placeholder: true
+  },
+  {
+    title: "Project Library",
+    category: "Data & Information Management",
+    subcategory: "Project Library",
+    description: "Central index of project documents, reports, and reference files.",
+    placeholder: true
+  },
+
+  // ---- Activity Management ----
+  {
+    code: "SRK-AGD-01",
+    title: "Event Agenda",
+    category: "Activity Management",
+    subcategory: "Event Agenda",
+    description: "Use before a multi-day training or workshop to plan sessions, timing, and facilitators day by day.",
+    badges: ["Day-by-day grid", "Facilitator picker", "Time slots"],
+    file: "event-agenda.html",
+    updated: "2026"
+  },
+  {
+    title: "Activity-wise Folder Guidance",
+    category: "Activity Management",
+    subcategory: "Activity-wise Folder Guidance",
+    description: "How to name and organize the folder of documents for a single activity.",
+    placeholder: true
+  },
+
+  // ---- Communication Materials ----
+  {
+    title: "PowerPoint Presentation Template",
+    category: "Communication Materials",
+    subcategory: "PowerPoint Presentation Template",
+    description: "Branded slide template for trainings, workshops, and donor presentations.",
+    placeholder: true
+  },
+
+  // ---- Accountability ----
+  {
+    title: "Complaint, Feedback and Response Mechanism (CFRM) Template",
+    category: "Accountability",
+    subcategory: "Complaint, Feedback and Response Mechanism (CFRM) Template",
+    description: "For logging and tracking complaints or feedback received from participants and communities.",
+    placeholder: true
+  }
+];
+
+function iconArrow(){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+}
+
+function folderHtml(t, accent){
+  if(t.placeholder){
+    return `
+      <div class="folder empty" data-tab="AWAITING">
+        <h3>${t.title}</h3>
+        <p class="desc">${t.description}</p>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--muted); margin:auto 0 0;">Not uploaded yet</p>
+      </div>`;
+  }
+  return `
+    <div class="folder" data-tab="${t.code}" style="--drawer-accent:${accent}">
+      <h3>${t.title}</h3>
+      <p class="desc">${t.description}</p>
+      <ul class="badges">${t.badges.map(b => `<li>${b}</li>`).join('')}</ul>
+      <div class="folder-footer">
+        <a class="open-link" href="${t.file}">Open template ${iconArrow()}</a>
+        <span class="updated">Updated ${t.updated}</span>
+      </div>
+    </div>`;
+}
+
+function emptyFolderHtml(category){
+  return `
+    <div class="folder empty">
+      <p>No ${category} templates filed yet.<br>Drop one into this drawer when it's ready.</p>
+    </div>`;
+}
+
+// Groups a category's items in original order — consecutive-or-not items
+// sharing a subcategory collapse into one nested sub-cabinet.
+function groupItems(items){
+  const groups = [];
+  const indexOf = {};
+  items.forEach(t=>{
+    if(t.subcategory){
+      if(indexOf[t.subcategory] === undefined){
+        indexOf[t.subcategory] = groups.length;
+        groups.push({ type:'group', name:t.subcategory, items:[t] });
+      } else {
+        groups[indexOf[t.subcategory]].items.push(t);
+      }
+    } else {
+      groups.push({ type:'single', item:t });
+    }
+  });
+  return groups;
+}
+
+function subdrawerHtml(group, accent){
+  const id = 'sub-' + group.name.replace(/[^a-z0-9]+/gi,'-').toLowerCase();
+  return `
+    <div class="subdrawer" data-open="false">
+      <button type="button" class="subdrawer-face" id="${id}-btn" aria-expanded="false" aria-controls="${id}-tray" style="--drawer-accent:${accent}">
+        <span class="sub-chevron" aria-hidden="true">&#9656;</span>
+        <span class="subdrawer-title">${group.name}</span>
+        <span class="sub-count">${group.items.length} ${group.items.length === 1 ? 'item' : 'items'}</span>
+      </button>
+      <div class="subdrawer-tray" id="${id}-tray" role="region" aria-labelledby="${id}-btn">
+        <div class="subtray-inner">
+          ${group.items.map(t => folderHtml(t, accent)).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// Opens a tray by animating to its measured height, then releases the cap
+// (max-height:none) so nested content can grow later without re-clipping.
+function openTray(tray){
+  tray.style.maxHeight = tray.scrollHeight + 'px';
+  const onEnd = (e)=>{
+    if(e.target === tray && e.propertyName === 'max-height'){
+      tray.style.maxHeight = 'none';
+      tray.removeEventListener('transitionend', onEnd);
+    }
+  };
+  tray.addEventListener('transitionend', onEnd);
+}
+
+// Closes a tray, first pinning it to its current pixel height (in case it's
+// currently 'none') so the browser has something to animate down from.
+function closeTray(tray){
+  if(tray.style.maxHeight === 'none' || tray.style.maxHeight === ''){
+    tray.style.maxHeight = tray.scrollHeight + 'px';
+    tray.getBoundingClientRect();
+  }
+  requestAnimationFrame(()=>{ tray.style.maxHeight = '0px'; });
+}
+
+function wireSubdrawers(root){
+  root.querySelectorAll('.subdrawer-face').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const sub = btn.closest('.subdrawer');
+      const tray = sub.querySelector('.subdrawer-tray');
+      const isOpen = sub.dataset.open === 'true';
+      sub.dataset.open = isOpen ? 'false' : 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      if(!isOpen){ openTray(tray); } else { closeTray(tray); }
+    });
+  });
+}
+
+function buildDrawers(query){
+  const q = (query || '').trim().toLowerCase();
+  const host = document.getElementById('drawersHost');
+  host.innerHTML = '';
+
+  CATEGORIES.forEach((cat, i) => {
+    let items = TEMPLATES.filter(t => t.category === cat.name);
+    if(q){
+      items = items.filter(t =>
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q) ||
+        (t.code || '').toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q) ||
+        (t.subcategory || '').toLowerCase().includes(q) ||
+        (t.badges || []).some(b => b.toLowerCase().includes(q))
+      );
+    }
+    const shouldOpen = !!q && items.length > 0;
+    if(q && items.length === 0 && cat.name.toLowerCase().indexOf(q) === -1) return;
+
+    const drawer = document.createElement('div');
+    drawer.className = 'drawer';
+    drawer.dataset.open = shouldOpen ? 'true' : 'false';
+
+    const groups = groupItems(items);
+    const trayContent = groups.length
+      ? groups.map(g => g.type === 'single' ? folderHtml(g.item, cat.accent) : subdrawerHtml(g, cat.accent)).join('')
+      : emptyFolderHtml(cat.name);
+
+    const drawerId = 'drawer-' + cat.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+    drawer.innerHTML = `
+      <button type="button" class="drawer-face" id="${drawerId}-btn" aria-expanded="${shouldOpen}" aria-controls="${drawerId}-tray" style="--drawer-accent:${cat.accent}">
+        <span class="drawer-num">No. ${String(i+1).padStart(2,'0')}</span>
+        <span class="drawer-handle" aria-hidden="true"></span>
+        <span class="drawer-title"><span class="dot" style="--drawer-accent:${cat.accent}"></span>${cat.name} <span class="count">${items.length} ${items.length === 1 ? 'template' : 'templates'}</span></span>
+        <span class="drawer-chevron" aria-hidden="true">&#9656;</span>
+      </button>
+      <div class="drawer-tray" id="${drawerId}-tray" role="region" aria-labelledby="${drawerId}-btn">
+        <div class="tray-inner">
+          ${trayContent}
+        </div>
+      </div>`;
+
+    const tray = drawer.querySelector('.drawer-tray');
+    wireSubdrawers(drawer);
+
+    if(shouldOpen){
+      requestAnimationFrame(()=> openTray(tray));
+    }
+
+    drawer.querySelector('.drawer-face').addEventListener('click', ()=>{
+      const isOpen = drawer.dataset.open === 'true';
+      drawer.dataset.open = isOpen ? 'false' : 'true';
+      drawer.querySelector('.drawer-face').setAttribute('aria-expanded', String(!isOpen));
+      if(!isOpen){ openTray(tray); } else { closeTray(tray); }
+    });
+
+    host.appendChild(drawer);
+  });
+
+  if(q && !host.children.length){
+    host.innerHTML = '<p style="padding:24px 20px; color:#EFEDE2; font-family:var(--mono); font-size:12.5px;">No templates match “' + query + '”.</p>';
+  }
+}
+
+document.getElementById('searchInput').addEventListener('input', (e)=> buildDrawers(e.target.value));
+
+buildDrawers('');
+</script>
+</body>
+</html>

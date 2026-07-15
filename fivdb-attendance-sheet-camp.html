@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Attendance Sheet - Camp</title>
+<style>
+  :root{
+    --ink:#262626;
+    --paper:#ffffff;
+    --line:#bfbfbf;
+    --accent:#1F3864;
+    --accent-teal:#2E7D6B;
+    --accent-soft:#F2F2F2;
+    --accent-soft2:#EAF1EF;
+    --muted:#595959;
+    --danger:#a5402f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#e5e5e5;
+    font-family:"Calibri","Segoe UI",Arial,sans-serif;
+    color:var(--ink);
+  }
+  #sheet p, #sheet li{text-align:justify;}
+  @media print{
+    *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
+  }
+  .toolbar{
+    position:sticky; top:0; z-index:50;
+    background:#1a1a1a; color:#f2f1ea;
+    padding:10px 18px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+    font-family:"Helvetica Neue",Arial,sans-serif;
+  }
+  .toolbar .brand{font-weight:700; letter-spacing:.04em; margin-right:auto; font-size:13px; text-transform:uppercase; color:#a9c9e8;}
+  .toolbar .status{font-size:11.5px; color:#a9c9e8; min-width:120px;}
+  .toolbar button{
+    background:transparent; color:#f2f1ea; border:1px solid #565656;
+    padding:7px 12px; border-radius:5px; font-size:12.5px; cursor:pointer;
+    font-family:inherit; transition:background .15s;
+  }
+  .toolbar button:hover{background:#333;}
+  .toolbar button.primary{background:var(--accent); border-color:var(--accent);}
+  .toolbar button.primary:hover{background:#16294a;}
+
+  .page-wrap{width:297mm; margin:26px auto 80px; padding:0 16px; box-sizing:border-box;}
+  #sheet{
+    width:297mm; margin:0 auto; box-sizing:border-box;
+    background:var(--paper); border:1px solid var(--line); padding:12mm 14mm;
+    box-shadow:0 2px 18px rgba(0,0,0,.12);
+  }
+  .masthead{display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:8px; margin-bottom:14px;}
+  .masthead .proj{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-family:"Helvetica Neue",Arial,sans-serif;}
+  .masthead .annex-label{font-size:13px; font-weight:700; color:#E8730A; font-family:"Helvetica Neue",Arial,sans-serif;}
+
+  .title-block{text-align:center; margin-bottom:14px;}
+  .title-block h1{font-family:"Times New Roman",Times,serif; color:var(--accent-teal); font-size:22px; font-weight:700; margin:0 0 2px;}
+  .title-block .org{font-size:14px; color:var(--ink); font-style:italic; font-family:"Times New Roman",Times,serif;}
+
+  .meta-table{width:100%; border-collapse:collapse; margin-bottom:12px; font-size:12.5px;}
+  .meta-table td{border:1px solid var(--line); padding:6px 8px; vertical-align:middle;}
+  .meta-table td.label{background:var(--accent-soft); font-weight:700; width:16%; font-family:"Helvetica Neue",Arial,sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:.02em; color:var(--accent);}
+  .meta-table input[type=text]{width:100%; border:none; background:transparent; font-size:13px; font-family:inherit; color:var(--ink); padding:2px;}
+  .meta-table input[type=text]:focus{outline:none; background:var(--accent-soft2);}
+
+  .consent-note{
+    font-size:11.5px; color:var(--ink); font-family:"Helvetica Neue",Arial,sans-serif;
+    margin:0 0 14px; padding:9px 12px; background:var(--accent-soft); border-left:3px solid var(--accent); line-height:1.6;
+  }
+
+  table.grid{width:100%; table-layout:fixed; border-collapse:collapse; font-size:11.5px;}
+  table.grid th, table.grid td{border:1px solid var(--line); padding:5px; text-align:center; vertical-align:middle; word-wrap:break-word; overflow-wrap:break-word;}
+  table.grid th{background:var(--accent); color:#fff; font-weight:700; font-size:10.5px; font-family:"Helvetica Neue",Arial,sans-serif;}
+  table.grid tbody tr:nth-child(even){background:var(--accent-soft2);}
+  table.grid td input, table.grid td textarea{
+    width:100%; border:none; background:transparent; font-family:inherit; font-size:11.5px;
+    text-align:center; padding:3px 2px; color:var(--ink); resize:none; overflow:hidden; min-height:32px; line-height:1.3;
+  }
+  table.grid td input:focus, table.grid td textarea:focus{outline:none; background:#fff;}
+  table.grid td.name-cell textarea, table.grid td.email-cell textarea, table.grid td.remarks-cell textarea{text-align:left;}
+  table.grid tr{break-inside:avoid; page-break-inside:avoid;}
+  table.grid td.remarks-cell{position:relative; padding-right:20px;}
+  table.grid td.remarks-cell textarea{padding-right:2px;}
+  .row-del{position:absolute; top:1px; right:1px; border:none; background:none; color:var(--danger); cursor:pointer; font-size:12px; padding:2px 4px;}
+  /* Photo Consent / Attendance are signed by hand once printed — give real blank space, not a small form field */
+  table.grid td.sign-cell{padding:2px;}
+  table.grid td.sign-cell input{
+    min-height:34px; border-bottom:1px solid var(--line); background:transparent;
+  }
+  table.grid td.sign-cell input:focus{border-bottom:1px solid var(--accent);}
+
+  .table-actions{margin-top:8px; text-align:center;}
+  .add-row{
+    border:1px dashed var(--line); background:none; color:var(--accent); cursor:pointer;
+    font-size:12px; padding:5px 12px; border-radius:4px; font-family:"Helvetica Neue",Arial,sans-serif;
+  }
+  .add-row:hover{background:var(--accent-soft);}
+
+  .total-row{display:flex; gap:18px; margin-top:14px; font-size:12px; font-family:"Helvetica Neue",Arial,sans-serif; flex-wrap:wrap; align-items:center;}
+  .total-row label{font-weight:700; color:var(--accent); text-transform:uppercase; font-size:11px; letter-spacing:.02em; margin-right:4px;}
+  .total-row .tf{display:inline-flex; align-items:center; gap:4px;}
+  .total-row input[type=text]{width:56px; border:none; border-bottom:1px solid var(--line); background:transparent; font-size:13px; padding:3px 2px; text-align:center; font-family:inherit; color:var(--ink);}
+  .total-row input[type=text]:focus{outline:none; border-bottom:1px solid var(--accent);}
+
+  .footer-note{margin-top:24px; text-align:center; font-size:10.5px; color:var(--muted); font-style:italic;}
+
+  @media print{
+    body{background:#fff;}
+    .toolbar{display:none;}
+    .page-wrap{margin:0; padding:0; max-width:none; width:auto;}
+    #sheet{box-shadow:none; border:none; padding:0.3in; width:auto;}
+    .add-row, .row-del{display:none !important;}
+    table.grid td input, table.grid td textarea{min-height:0.42in;}
+    table.grid td.sign-cell input{min-height:0.42in; border-bottom:1px solid #999;}
+    table.grid td{padding:2px 5px;}
+  }
+  @page{
+    size: A4 landscape; margin: 0.5in; margin-top: 0.6in;
+    @bottom-center{
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 9pt;
+      color: #595959;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="brand">FIVDB · Attendance Sheet (Camp)</span>
+  <span class="status" id="statusMsg"></span>
+  <button onclick="window.print()">🖨️ Print</button>
+  <button class="primary" onclick="saveAsHTML()">💾 Save</button>
+  <button onclick="addParticipantRow()">＋ Add row</button>
+  <button onclick="clearAll()">✕ Clear form</button>
+</div>
+
+<div class="page-wrap">
+<div id="sheet">
+
+  <div class="masthead">
+    <div class="annex-label">Annexes (8): Attendance Sheet</div>
+    <div class="proj">SURAKKHA PROJECT</div>
+  </div>
+
+  <div class="title-block">
+    <h1>ATTENDANCE SHEET</h1>
+    <div class="org">Friends In Village Development Bangladesh (FIVDB)</div>
+  </div>
+
+  <table class="meta-table">
+    <tr>
+      <td class="label">Project / Action</td>
+      <td colspan="3"><input type="text" data-field="projectAction" value="SURAKKHA - DG ECHO 2026/00158/RQ/01/03"></td>
+    </tr>
+    <tr>
+      <td class="label">Event / activity title</td>
+      <td><input type="text" data-field="eventTitle" placeholder="Enter the event title"></td>
+      <td class="label">Activity code</td>
+      <td><input type="text" data-field="activityCode" placeholder="R1Ax / R2Ax"></td>
+    </tr>
+    <tr>
+      <td class="label">Date</td>
+      <td><input type="date" data-field="eventDate"></td>
+      <td class="label">Venue / camp / facility</td>
+      <td><input type="text" data-field="venue" placeholder="Enter the venue"></td>
+    </tr>
+  </table>
+
+  <p class="consent-note">
+    <strong>Note for Photo Consent:</strong> if a participant agrees to have their picture used in FIVDB reports, publications, or on social media platforms, they should write their <strong>signature</strong> in the "Photo Consent" column. If a participant does <strong>not</strong> consent, write <strong>"No"</strong> in that column instead — do not leave it blank.
+  </p>
+
+  <table class="grid" id="attTable">
+    <colgroup>
+      <col style="width:3%"><col style="width:14%"><col style="width:6%"><col style="width:9%">
+      <col style="width:12%"><col style="width:9%"><col style="width:13%"><col style="width:11%">
+      <col style="width:11%"><col style="width:12%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th>SL#</th><th>Name</th><th>Sex<br>(F/M)</th><th>Role</th>
+        <th>Progress ID</th><th>Person with<br>disability</th><th>Phone number<br>(if applicable)</th>
+        <th>Photo Consent<br>(Sign / No)</th><th>Attendance<br>(Sign)</th><th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="table-actions"><button class="add-row" onclick="addParticipantRow()">+ Add row</button></div>
+
+  <div class="total-row">
+    <span><label>Total participants</label>(count by sex, from the register above)</span>
+    <span class="tf">Male: <input type="text" data-field="total_male"></span>
+    <span class="tf">Female: <input type="text" data-field="total_female"></span>
+    <span class="tf">With disability: <input type="text" data-field="total_disability"></span>
+    <span class="tf">Total: <input type="text" data-field="total_all"></span>
+  </div>
+
+  <div class="footer-note">SURAKKHA PROJECT — Attendance Sheet (Camp)</div>
+
+</div>
+</div>
+
+<script>
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+function autoGrow(el){ el.style.height='auto'; el.style.height=(el.scrollHeight)+'px'; }
+
+function addParticipantRow(data){
+  data = data || {};
+  const tbody = document.querySelector('#attTable tbody');
+  const idx = tbody.children.length + 1;
+  const tr = document.createElement('tr');
+  const cols = ['name','sex','role','org','disability','contact','photoConsent','attendance','remarks'];
+  const textCols = ['name','contact','remarks'];
+  tr.innerHTML = `<td>${idx}</td>` + cols.map(c=>{
+    const val = data[c] || '';
+    let cls = '';
+    if(c==='name') cls='name-cell';
+    else if(c==='contact') cls='email-cell';
+    else if(c==='remarks') cls='remarks-cell';
+    else if(c==='photoConsent' || c==='attendance') cls='sign-cell';
+    if(textCols.includes(c)){
+      return `<td class="${cls}"><textarea rows="1" data-col="${c}" oninput="autoGrow(this)">${escapeHtml(val)}</textarea></td>`;
+    }
+    return `<td class="${cls}"><input type="text" data-col="${c}" value="${escapeAttr(val)}"></td>`;
+  }).join('');
+  tbody.appendChild(tr);
+  tr.querySelector('.remarks-cell').insertAdjacentHTML('beforeend', `<button class="row-del" onclick="this.closest('tr').remove(); renumberRows();">✕</button>`);
+  tr.querySelectorAll('textarea').forEach(autoGrow);
+}
+
+function renumberRows(){
+  document.querySelectorAll('#attTable tbody tr').forEach((tr,i)=>{
+    tr.children[0].textContent = i+1;
+  });
+}
+
+function collectData(){
+  const data = {};
+  document.querySelectorAll('#sheet [data-field]').forEach(el => data[el.dataset.field] = el.value);
+  data.rows = [...document.querySelectorAll('#attTable tbody tr')].map(tr=>{
+    const o = {};
+    tr.querySelectorAll('[data-col]').forEach(el => o[el.dataset.col] = el.value);
+    return o;
+  });
+  return data;
+}
+
+function populateData(data){
+  data = data || {};
+  document.querySelectorAll('#sheet [data-field]').forEach(el=>{
+    el.value = (data[el.dataset.field] !== undefined) ? data[el.dataset.field] : (el.dataset.field==='projectAction' ? 'SURAKKHA - DG ECHO 2026/00158/RQ/01/03' : '');
+  });
+  document.querySelector('#attTable tbody').innerHTML = '';
+  const rows = (data.rows && data.rows.length) ? data.rows : Array.from({length:15}, ()=>({}));
+  rows.forEach(r => addParticipantRow(r));
+}
+
+function setStatus(msg){
+  const s = document.getElementById('statusMsg');
+  s.textContent = msg;
+  setTimeout(()=>{ if(s.textContent===msg) s.textContent=''; }, 3500);
+}
+
+function clearAll(){
+  if(!confirm('Clear the whole attendance sheet? This cannot be undone.')) return;
+  populateData({});
+  setStatus('Form cleared');
+}
+
+function saveAsHTML(){
+  const data = collectData();
+  const clone = document.documentElement.cloneNode(true);
+  const old = clone.querySelector('#embedded-data');
+  if(old) old.remove();
+  const script = clone.ownerDocument.createElement('script');
+  script.id = 'embedded-data';
+  script.type = 'application/json';
+  script.textContent = JSON.stringify(data);
+  clone.querySelector('head').appendChild(script);
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  const stamp = new Date().toISOString().slice(0,10);
+  link.download = `FIVDB_Attendance_Sheet_Camp_${stamp}.html`;
+  link.click();
+  setStatus('✓ Downloaded');
+}
+
+// ---------- Init ----------
+(function(){
+  const embedded = document.getElementById('embedded-data');
+  if(embedded){
+    try{ populateData(JSON.parse(embedded.textContent)); return; }catch(e){ /* fall through */ }
+  }
+  populateData({});
+})();
+</script>
+
+</body>
+</html>
