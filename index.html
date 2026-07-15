@@ -7,14 +7,18 @@
 <meta name="description" content="Fill-in-browser document templates for the SURAKKHA project — export straight to PDF or Word, no installs required.">
 <style>
   :root{
-    --paper:#EDEBE2;
-    --card:#FFFFFF;
     --ink:#262626;
-    --muted:#5B584F;
-    --line:#D8D4C6;
-    --navy:#1F3864;
+    --muted:#6B6A62;
+    --line:#C9C5B7;
+    --manila:#F0E6CC;
+    --manila-dark:#E4D6AE;
+    --steel:#4B564E;
+    --steel-dark:#333B36;
+    --steel-light:#5E6A62;
+    --floor:#DAD7CC;
     --teal:#2E7D6B;
     --blue:#0072CE;
+    --amber:#C97B1D;
     --stamp:#A5402F;
     --focus:#0072CE;
     --serif:"Times New Roman", Georgia, "Noto Serif", serif;
@@ -24,168 +28,195 @@
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    margin:0; background:var(--paper); color:var(--ink);
+    margin:0; background:var(--floor); color:var(--ink);
     font-family:var(--sans); line-height:1.5;
-    background-image:
-      linear-gradient(var(--paper) 0%, var(--paper) 100%),
-      repeating-linear-gradient(0deg, rgba(0,0,0,.015) 0px, rgba(0,0,0,.015) 1px, transparent 1px, transparent 3px);
+    background-image:repeating-linear-gradient(135deg, rgba(0,0,0,.02) 0px, rgba(0,0,0,.02) 1px, transparent 1px, transparent 26px);
   }
-
-  a{color:var(--navy);}
+  a{color:var(--steel-dark);}
   .skip-link{
-    position:absolute; left:-999px; top:0; background:var(--navy); color:#fff;
+    position:absolute; left:-999px; top:0; background:var(--steel-dark); color:#fff;
     padding:10px 16px; z-index:100; font-family:var(--sans); font-size:13px; border-radius:0 0 6px 0;
   }
   .skip-link:focus{left:0;}
-
   :focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
 
-  .wrap{max-width:980px; margin:0 auto; padding:0 22px;}
+  .wrap{max-width:900px; margin:0 auto; padding:0 22px;}
 
-  /* ---- Masthead ---- */
-  header.masthead{
-    border-bottom:3px solid var(--navy); padding:34px 0 22px;
-  }
+  header.masthead{padding:34px 0 20px;}
   .masthead-row{display:flex; justify-content:space-between; align-items:flex-end; gap:20px; flex-wrap:wrap;}
   .eyebrow{
     font-family:var(--mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
     color:var(--teal); font-weight:700;
   }
   h1{
-    font-family:var(--serif); font-weight:700; font-size:clamp(28px,4.2vw,40px);
-    margin:8px 0 6px; color:var(--navy); letter-spacing:.01em;
+    font-family:var(--serif); font-weight:700; font-size:clamp(26px,4vw,36px);
+    margin:8px 0 6px; color:var(--steel-dark); letter-spacing:.01em;
   }
-  .org-line{font-family:var(--serif); font-style:italic; font-size:16px; color:var(--muted);}
+  .org-line{font-family:var(--serif); font-style:italic; font-size:15px; color:var(--muted);}
   .proj-code{
-    font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right;
-    border:1px solid var(--line); padding:8px 12px; background:var(--card);
-    white-space:nowrap;
+    font-family:var(--mono); font-size:11.5px; color:var(--muted); text-align:right;
+    border:1px solid var(--line); padding:7px 11px; background:var(--manila);
   }
-  .proj-code strong{display:block; color:var(--ink); font-size:12.5px; margin-bottom:2px;}
+  .proj-code strong{display:block; color:var(--ink); font-size:12px; margin-bottom:2px;}
+  .lede{max-width:60ch; font-size:15px; color:var(--muted); margin:18px 0 0;}
 
-  .lede{
-    max-width:64ch; font-size:15.5px; color:var(--muted); margin:20px 0 0;
-  }
-
-  /* ---- Accessibility strip ---- */
-  .a11y-strip{
-    display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 0; padding:0; list-style:none;
-  }
+  .a11y-strip{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 0; padding:0; list-style:none;}
   .a11y-strip li{
-    font-family:var(--mono); font-size:11.5px; color:var(--teal);
-    border:1px solid var(--teal); border-radius:3px; padding:5px 9px;
-    background:rgba(46,125,107,.06); display:flex; align-items:center; gap:5px;
+    font-family:var(--mono); font-size:11px; color:var(--teal);
+    border:1px solid var(--teal); border-radius:3px; padding:4px 8px;
+    background:rgba(46,125,107,.07); display:flex; align-items:center; gap:5px;
   }
-  .a11y-strip li svg{width:12px; height:12px; flex:none;}
+  .a11y-strip li svg{width:11px; height:11px; flex:none;}
 
-  /* ---- Filter chips ---- */
-  nav.filters{
-    display:flex; gap:8px; flex-wrap:wrap; margin:30px 0 4px;
-    font-family:var(--mono); font-size:12.5px;
+  .search-row{margin:24px 0 30px;}
+  .search-row label{
+    display:block; font-family:var(--mono); font-size:11px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--muted); margin-bottom:6px;
   }
-  nav.filters button{
-    background:var(--card); border:1px solid var(--line); color:var(--muted);
-    padding:7px 14px; border-radius:20px; cursor:pointer; font-family:inherit; font-size:inherit;
-    transition:background .15s, color .15s, border-color .15s;
+  .search-row input{
+    width:100%; font:inherit; font-size:15px; padding:12px 14px;
+    border:1px solid var(--steel); background:#fff; color:var(--ink);
+    font-family:var(--sans);
   }
-  nav.filters button:hover{border-color:var(--navy); color:var(--navy);}
-  nav.filters button[aria-pressed="true"]{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .search-row input:focus{outline:none; border-color:var(--focus); box-shadow:0 0 0 3px rgba(0,114,206,.18);}
 
-  /* ---- Registry section ---- */
-  section.registry{padding:26px 0 10px;}
-  .count-line{font-size:12px; color:var(--muted); font-family:var(--mono); margin:0 0 16px;}
-
-  .grid{
-    display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:22px;
+  /* ---- Cabinet ---- */
+  .cabinet{
+    background:linear-gradient(180deg, var(--steel-light) 0%, var(--steel) 6%, var(--steel-dark) 100%);
+    border-radius:3px 3px 0 0;
+    padding:0;
+    box-shadow:0 14px 30px rgba(0,0,0,.22);
+    position:relative;
   }
-
-  .card{
-    position:relative; background:var(--card); border:1px solid var(--line);
-    padding:22px 20px 20px; display:flex; flex-direction:column; gap:12px;
-    transition:transform .18s ease, box-shadow .18s ease;
-    border-top:4px solid var(--card-accent, var(--navy));
+  .cabinet-plate{
+    text-align:center; padding:14px 10px 12px;
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:#D9D6C8; border-bottom:2px solid rgba(0,0,0,.35);
   }
-  .card:hover, .card:focus-within{
-    transform:translateY(-3px);
-    box-shadow:0 10px 24px rgba(31,56,100,.12);
-  }
-
-  .stamp{
-    position:absolute; top:-10px; right:16px; transform:rotate(-4deg);
-    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.05em;
-    color:var(--stamp); border:1.5px solid var(--stamp); border-radius:3px;
-    padding:3px 7px; background:var(--card); text-transform:uppercase;
+  .cabinet-legs{
+    height:14px; background:var(--steel-dark); border-radius:0 0 2px 2px;
+    box-shadow:0 4px 8px rgba(0,0,0,.3);
+    margin-bottom:34px;
   }
 
-  .card-category{
-    font-family:var(--mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em;
-    color:var(--card-accent, var(--navy)); font-weight:700;
-  }
-  .card h2{
-    font-family:var(--serif); font-size:20px; margin:0; color:var(--ink); line-height:1.25;
-  }
-  .card p.desc{font-size:13.5px; color:var(--muted); margin:0; flex:1;}
+  .drawer{border-bottom:1px solid rgba(0,0,0,.3);}
+  .drawer:last-of-type{border-bottom:none;}
 
+  .drawer-face{
+    width:100%; text-align:left; border:none; cursor:pointer;
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12));
+    padding:16px 20px; display:flex; align-items:center; gap:16px;
+    font-family:inherit; color:#EFEDE2;
+    transition:background .12s;
+  }
+  .drawer-face:hover{background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(0,0,0,.14));}
+  .drawer-face:active{transform:translateY(1px);}
+
+  .drawer-num{
+    font-family:var(--mono); font-size:10.5px; color:rgba(239,237,226,.55);
+    border:1px solid rgba(239,237,226,.35); border-radius:2px; padding:3px 6px; flex:none;
+  }
+  .drawer-handle{
+    width:52px; height:9px; border-radius:5px; flex:none;
+    background:linear-gradient(180deg, #C9C5B7, #8A8879);
+    box-shadow:0 1px 2px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .drawer-title{
+    font-family:var(--serif); font-size:17px; font-weight:700; flex:1;
+    display:flex; align-items:baseline; gap:10px;
+  }
+  .drawer-title .dot{
+    width:9px; height:9px; border-radius:50%; flex:none; background:var(--drawer-accent, var(--teal));
+    box-shadow:0 0 0 2px rgba(255,255,255,.15);
+  }
+  .drawer-title .count{
+    font-family:var(--mono); font-size:11px; font-weight:400; color:rgba(239,237,226,.6);
+  }
+  .drawer-chevron{
+    font-size:14px; color:rgba(239,237,226,.7); flex:none; transition:transform .22s ease;
+  }
+  .drawer[data-open="true"] .drawer-chevron{transform:rotate(90deg);}
+
+  .drawer-tray{
+    overflow:hidden; max-height:0; opacity:0;
+    transition:max-height .32s ease, opacity .28s ease;
+    background:var(--manila);
+  }
+  .drawer[data-open="true"] .drawer-tray{opacity:1;}
+
+  .tray-inner{padding:20px; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;}
+
+  .folder{
+    position:relative; background:#fff; border:1px solid var(--line);
+    padding:20px 18px 16px; display:flex; flex-direction:column; gap:10px;
+    margin-top:14px;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .folder::before{
+    content:attr(data-tab); position:absolute; top:-14px; left:16px;
+    background:var(--manila-dark); border:1px solid var(--line); border-bottom:none;
+    font-family:var(--mono); font-size:9.5px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--steel-dark); padding:4px 9px 3px; border-radius:3px 3px 0 0;
+  }
+  .folder:hover, .folder:focus-within{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(0,0,0,.14);
+  }
+  .folder h3{font-family:var(--serif); font-size:17px; margin:0; color:var(--ink); line-height:1.25;}
+  .folder p.desc{font-size:13px; color:var(--muted); margin:0;}
   ul.badges{list-style:none; margin:2px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px;}
   ul.badges li{
-    font-size:10.5px; font-family:var(--sans); color:var(--muted);
-    background:#F3F2EC; border:1px solid var(--line); border-radius:3px; padding:3px 7px;
+    font-size:10px; color:var(--muted); background:#F3F2EC; border:1px solid var(--line);
+    border-radius:3px; padding:3px 7px;
   }
-
-  .card-footer{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:6px;}
+  .folder-footer{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:4px;}
   .open-link{
-    font-family:var(--sans); font-weight:700; font-size:13.5px; text-decoration:none;
-    color:#fff; background:var(--card-accent, var(--navy)); padding:9px 16px;
+    font-family:var(--sans); font-weight:700; font-size:13px; text-decoration:none;
+    color:#fff; background:var(--drawer-accent, var(--teal)); padding:9px 15px;
     display:inline-flex; align-items:center; gap:6px; border-radius:2px;
     transition:filter .15s;
   }
   .open-link:hover{filter:brightness(1.12);}
-  .open-link svg{width:13px; height:13px;}
-  .updated{font-family:var(--mono); font-size:10.5px; color:var(--muted);}
+  .open-link svg{width:12px; height:12px;}
+  .updated{font-family:var(--mono); font-size:10px; color:var(--muted);}
 
-  .empty-state{
-    font-family:var(--mono); font-size:13px; color:var(--muted); border:1px dashed var(--line);
-    padding:30px; text-align:center; grid-column:1/-1;
+  .folder.empty{
+    align-items:center; justify-content:center; text-align:center; color:var(--muted);
+    border-style:dashed; background:transparent; box-shadow:none;
   }
+  .folder.empty:hover{transform:none; box-shadow:none;}
+  .folder.empty p{font-family:var(--mono); font-size:12px; margin:0;}
 
   /* ---- How it works ---- */
-  section.how{
-    margin-top:52px; padding:26px 0 6px; border-top:1px solid var(--line);
-  }
-  section.how h2{
-    font-family:var(--serif); color:var(--navy); font-size:19px; margin:0 0 18px;
-  }
-  .steps{
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px;
-  }
-  .step .num{
-    font-family:var(--mono); font-size:11px; color:var(--teal); font-weight:700;
-  }
+  section.how{margin-top:56px; padding:26px 0 6px; border-top:1px solid var(--line);}
+  section.how h2{font-family:var(--serif); color:var(--steel-dark); font-size:19px; margin:0 0 18px;}
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px;}
+  .step .num{font-family:var(--mono); font-size:11px; color:var(--teal); font-weight:700;}
   .step h3{font-family:var(--sans); font-size:14px; margin:6px 0 5px; color:var(--ink);}
   .step p{font-size:13px; color:var(--muted); margin:0;}
 
-  /* ---- Footer ---- */
   footer{
-    margin-top:56px; border-top:3px solid var(--navy); padding:20px 0 40px;
+    margin-top:50px; border-top:3px solid var(--steel-dark); padding:20px 0 40px;
     font-size:12px; color:var(--muted); font-family:var(--sans);
   }
-  footer a{color:var(--navy);}
+  footer a{color:var(--steel-dark);}
   .footer-row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
   @media (max-width:600px){
     .masthead-row{flex-direction:column; align-items:flex-start;}
     .proj-code{text-align:left;}
+    .drawer-title{font-size:15px;}
+    .drawer-handle{display:none;}
   }
-
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
-    .card{transition:none;}
-    .card:hover, .card:focus-within{transform:none;}
+    .folder, .drawer-tray, .drawer-chevron{transition:none;}
+    .folder:hover, .folder:focus-within{transform:none;}
   }
 </style>
 </head>
 <body>
-<a class="skip-link" href="#registry">Skip to templates</a>
+<a class="skip-link" href="#cabinet">Skip to templates</a>
 
 <div class="wrap">
   <header class="masthead">
@@ -209,21 +240,24 @@
     </ul>
   </header>
 
-  <nav class="filters" id="filters" aria-label="Filter templates by category"></nav>
+  <div class="search-row">
+    <label for="searchInput">Find a template</label>
+    <input type="text" id="searchInput" placeholder="Try “agenda”, “attendance”, or a category like “MEAL”" autocomplete="off">
+  </div>
 
-  <section class="registry" id="registry" aria-labelledby="registry-heading">
-    <h2 id="registry-heading" class="visually-hidden" style="position:absolute;left:-9999px;">Available templates</h2>
-    <p class="count-line" id="countLine"></p>
-    <div class="grid" id="cardGrid"></div>
-  </section>
+  <div class="cabinet" id="cabinet">
+    <div class="cabinet-plate">SURAKKHA registry cabinet</div>
+    <div id="drawersHost"></div>
+  </div>
+  <div class="cabinet-legs"></div>
 
   <section class="how" aria-labelledby="how-heading">
     <h2 id="how-heading">How the templates work</h2>
     <div class="steps">
       <div class="step">
         <div class="num">01</div>
-        <h3>Open a template</h3>
-        <p>Click a template below — it opens in your browser, already laid out as an A4 document.</p>
+        <h3>Open a drawer</h3>
+        <p>Pick a category above — a template opens straight in your browser, laid out as an A4 document.</p>
       </div>
       <div class="step">
         <div class="num">02</div>
@@ -252,18 +286,17 @@
 </div>
 
 <script>
-/*
-  To add a new template later:
-  1. Drop the .html file into /templates
-  2. Add one entry to the TEMPLATES array below
-  No other changes are needed — the page builds the filters and cards from this list.
-*/
+const CATEGORIES = [
+  { name: "Reporting", accent: "var(--teal)" },
+  { name: "Planning", accent: "var(--blue)" },
+  { name: "MEAL", accent: "var(--amber)" }
+];
+
 const TEMPLATES = [
   {
     code: "SRK-RPT-01",
     title: "Event / Activity Report",
     category: "Reporting",
-    accent: "var(--teal)",
     description: "Use after any training, distribution, or field activity to record background, attendance, target vs. achievement, and sign-off.",
     badges: ["Attendance table", "Photo annex", "Signatures"],
     file: "surakkha-event-report.html",
@@ -273,10 +306,27 @@ const TEMPLATES = [
     code: "SRK-AGD-01",
     title: "Event Agenda",
     category: "Planning",
-    accent: "var(--blue)",
     description: "Use before a multi-day training or workshop to plan sessions, timing, and facilitators day by day.",
     badges: ["Day-by-day grid", "Facilitator picker", "Time slots"],
     file: "event-agenda.html",
+    updated: "2026"
+  },
+  {
+    code: "SRK-ATT-01",
+    title: "Attendance Sheet",
+    category: "Reporting",
+    description: "Annex to the Event Report — record who attended, sex, role, organization, and photo consent for a standard field activity.",
+    badges: ["Photo consent", "Sex-disaggregated", "A4 landscape"],
+    file: "fivdb-attendance-sheet.html",
+    updated: "2026"
+  },
+  {
+    code: "SRK-ATT-02",
+    title: "Attendance Sheet — Camp",
+    category: "Reporting",
+    description: "Same as the standard attendance sheet, adapted for camp settings — records Progress ID instead of organization.",
+    badges: ["Photo consent", "Progress ID", "A4 landscape"],
+    file: "fivdb-attendance-sheet-camp.html",
     updated: "2026"
   }
 ];
@@ -285,49 +335,90 @@ function iconArrow(){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 }
 
-function renderFilters(active){
-  const cats = ["All", ...new Set(TEMPLATES.map(t => t.category))];
-  const nav = document.getElementById('filters');
-  nav.innerHTML = cats.map(c =>
-    `<button type="button" data-cat="${c}" aria-pressed="${c === active}">${c}</button>`
-  ).join('');
-  nav.querySelectorAll('button').forEach(btn=>{
-    btn.addEventListener('click', ()=> renderAll(btn.dataset.cat));
-  });
-}
-
-function renderCards(active){
-  const grid = document.getElementById('cardGrid');
-  const list = active === "All" ? TEMPLATES : TEMPLATES.filter(t => t.category === active);
-  document.getElementById('countLine').textContent =
-    list.length + (list.length === 1 ? ' template' : ' templates') + (active !== "All" ? ' · ' + active : '');
-
-  if(!list.length){
-    grid.innerHTML = '<p class="empty-state">No templates in this category yet.</p>';
-    return;
-  }
-
-  grid.innerHTML = list.map(t => `
-    <article class="card" style="--card-accent:${t.accent}">
-      <span class="stamp">${t.code}</span>
-      <span class="card-category">${t.category}</span>
-      <h2>${t.title}</h2>
+function folderHtml(t, accent){
+  return `
+    <div class="folder" data-tab="${t.code}" style="--drawer-accent:${accent}">
+      <h3>${t.title}</h3>
       <p class="desc">${t.description}</p>
       <ul class="badges">${t.badges.map(b => `<li>${b}</li>`).join('')}</ul>
-      <div class="card-footer">
+      <div class="folder-footer">
         <a class="open-link" href="${t.file}">Open template ${iconArrow()}</a>
         <span class="updated">Updated ${t.updated}</span>
       </div>
-    </article>
-  `).join('');
+    </div>`;
 }
 
-function renderAll(active){
-  renderFilters(active);
-  renderCards(active);
+function emptyFolderHtml(category){
+  return `
+    <div class="folder empty">
+      <p>No ${category} templates filed yet.<br>Drop one into this drawer when it's ready.</p>
+    </div>`;
 }
 
-renderAll("All");
+function buildDrawers(query){
+  const q = (query || '').trim().toLowerCase();
+  const host = document.getElementById('drawersHost');
+  host.innerHTML = '';
+
+  CATEGORIES.forEach((cat, i) => {
+    let items = TEMPLATES.filter(t => t.category === cat.name);
+    if(q){
+      items = items.filter(t =>
+        t.title.toLowerCase().includes(q) ||
+        t.description.toLowerCase().includes(q) ||
+        t.code.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q) ||
+        t.badges.some(b => b.toLowerCase().includes(q))
+      );
+    }
+    const shouldOpen = !!q && items.length > 0;
+    if(q && items.length === 0 && cat.name.toLowerCase().indexOf(q) === -1) return;
+
+    const drawer = document.createElement('div');
+    drawer.className = 'drawer';
+    drawer.dataset.open = shouldOpen ? 'true' : 'false';
+
+    const drawerId = 'drawer-' + cat.name.toLowerCase();
+    drawer.innerHTML = `
+      <button type="button" class="drawer-face" id="${drawerId}-btn" aria-expanded="${shouldOpen}" aria-controls="${drawerId}-tray" style="--drawer-accent:${cat.accent}">
+        <span class="drawer-num">No. ${String(i+1).padStart(2,'0')}</span>
+        <span class="drawer-handle" aria-hidden="true"></span>
+        <span class="drawer-title"><span class="dot" style="--drawer-accent:${cat.accent}"></span>${cat.name} <span class="count">${items.length} ${items.length === 1 ? 'template' : 'templates'}</span></span>
+        <span class="drawer-chevron" aria-hidden="true">&#9656;</span>
+      </button>
+      <div class="drawer-tray" id="${drawerId}-tray" role="region" aria-labelledby="${drawerId}-btn">
+        <div class="tray-inner">
+          ${items.length ? items.map(t => folderHtml(t, cat.accent)).join('') : emptyFolderHtml(cat.name)}
+        </div>
+      </div>`;
+
+    const tray = drawer.querySelector('.drawer-tray');
+    if(shouldOpen){
+      requestAnimationFrame(()=>{ tray.style.maxHeight = tray.scrollHeight + 'px'; });
+    }
+
+    drawer.querySelector('.drawer-face').addEventListener('click', ()=>{
+      const isOpen = drawer.dataset.open === 'true';
+      drawer.dataset.open = isOpen ? 'false' : 'true';
+      drawer.querySelector('.drawer-face').setAttribute('aria-expanded', String(!isOpen));
+      if(!isOpen){
+        tray.style.maxHeight = tray.scrollHeight + 'px';
+      } else {
+        tray.style.maxHeight = '0px';
+      }
+    });
+
+    host.appendChild(drawer);
+  });
+
+  if(q && !host.children.length){
+    host.innerHTML = '<p style="padding:24px 20px; color:#EFEDE2; font-family:var(--mono); font-size:12.5px;">No templates match “' + query + '”.</p>';
+  }
+}
+
+document.getElementById('searchInput').addEventListener('input', (e)=> buildDrawers(e.target.value));
+
+buildDrawers('');
 </script>
 </body>
 </html>

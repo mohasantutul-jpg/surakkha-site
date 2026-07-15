@@ -422,18 +422,18 @@
     <strong>How to name your attached files:</strong> rename each document you attach to match its line number here, in the format <strong>Annexes (N): [document name]</strong> — for example, the schedule file for item 3 should be saved as <em>"Annexes (3): Training Schedule.pdf"</em>. This keeps every attachment clearly linked to the checklist item it belongs to.
   </p>
   <ul class="annex-list">
-    <li><label><input type="checkbox" data-field="annex_1"><span><strong>Annexes (1):</strong> Invitation / Approval / Notification Letter — e.g. acknowledgment letter</span></label></li>
-    <li><label><input type="checkbox" data-field="annex_2"><span><strong>Annexes (2):</strong> Email communication with stakeholder / technical partner, etc. (if any)</span></label></li>
+    <li><label><input type="checkbox" data-field="annex_1"><span><strong>Annexes (1):</strong> Concept Note <span class="annex-tag">(Mandatory)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_2"><span><strong>Annexes (2):</strong> Safeguarding &amp; PSHEA Risk Assessment for the event <span class="annex-tag">(Mandatory for each event)</span></span></label></li>
     <li><label><input type="checkbox" data-field="annex_3"><span><strong>Annexes (3):</strong> Schedule <span class="annex-tag">(Mandatory)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_4"><span><strong>Annexes (4):</strong> Concept Note <span class="annex-tag">(Mandatory)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_5"><span><strong>Annexes (5):</strong> Documents / PPT <span class="annex-tag">(Mandatory)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_6"><span><strong>Annexes (6):</strong> Budget Breakdown <span class="annex-tag">(Optional)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_7"><span><strong>Annexes (7):</strong> Attendance / Muster Roll <span class="annex-tag">(Mandatory — completed and scanned copy)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_8"><span><strong>Annexes (8):</strong> Photo <span class="annex-tag">(Good quality, including banner/visibility, covering all participants — max 3, as separate document or JPEG files)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_9"><span><strong>Annexes (9):</strong> Resolution <span class="annex-tag">(in a few cases)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_10"><span><strong>Annexes (10):</strong> Assessment / Pre-Post Test / Evaluation <span class="annex-tag">(for training, series of sessions, etc.)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_11"><span><strong>Annexes (11):</strong> Safeguarding &amp; PSHEA Risk Assessment for the event <span class="annex-tag">(Mandatory for each event)</span></span></label></li>
-    <li><label><input type="checkbox" data-field="annex_12"><span><strong>Annexes (12):</strong> Participants list <span class="annex-tag">(Mandatory)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_4"><span><strong>Annexes (4):</strong> Participants list <span class="annex-tag">(Mandatory)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_5"><span><strong>Annexes (5):</strong> Invitation / Approval / Notification Letter — e.g. acknowledgment letter</span></label></li>
+    <li><label><input type="checkbox" data-field="annex_6"><span><strong>Annexes (6):</strong> Email communication with stakeholder / technical partner, etc. (if any)</span></label></li>
+    <li><label><input type="checkbox" data-field="annex_7"><span><strong>Annexes (7):</strong> Photo <span class="annex-tag">(Good quality, including banner/visibility, covering all participants — max 3, as separate document or JPEG files)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_8"><span><strong>Annexes (8):</strong> Attendance / Muster Roll <span class="annex-tag">(Mandatory — completed and scanned copy)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_9"><span><strong>Annexes (9):</strong> Assessment / Pre-Post Test / Evaluation <span class="annex-tag">(for training, series of sessions, etc.)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_10"><span><strong>Annexes (10):</strong> Resolution <span class="annex-tag">(in a few cases)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_11"><span><strong>Annexes (11):</strong> Documents / PPT <span class="annex-tag">(Mandatory)</span></span></label></li>
+    <li><label><input type="checkbox" data-field="annex_12"><span><strong>Annexes (12):</strong> Budget Breakdown <span class="annex-tag">(Optional)</span></span></label></li>
   </ul>
 
   <div class="sign-grid">
@@ -484,7 +484,7 @@
     </div>
   </div>
 
-  <h2 class="section" id="annexPhotos" style="margin-top:44px;">Annexes 8: Photo Documentation — (Photos 1–6)</h2>
+  <h2 class="section" id="annexPhotos" style="margin-top:44px;">Annexes 7: Photo Documentation — (Photos 1–6)</h2>
   <div class="photo-grid" id="photoGrid"></div>
 
   <div class="footer-note">SURAKKHA PROJECT · DG ECHO 2026/00158 — FIVDB internal reporting template<br>For technical support, please contact <a href="mailto:mohasan.uddin@fivdb.org" style="color:inherit;">mohasan.uddin@fivdb.org</a></div>
@@ -665,10 +665,11 @@ function populateData(data){
 
   ['feedback','challenges','recommendations'].forEach(key=>{
     const map = {feedback:'feedbackList', challenges:'challengesList', recommendations:'recommendationsList'};
+    const placeholders = {feedback:'Feedback', challenges:'Challenge', recommendations:'Recommendation'};
     const ul = document.getElementById(map[key]);
     ul.innerHTML='';
     const vals = (data[key] && data[key].length===3) ? data[key] : ['','',''];
-    vals.forEach(v=>addListItem(map[key], key.charAt(0).toUpperCase()+key.slice(1,-1)+' ', v));
+    vals.forEach(v=>addListItem(map[key], placeholders[key], v));
   });
 
   document.querySelector('#participantsTable tbody').innerHTML='';

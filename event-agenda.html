@@ -94,8 +94,8 @@
 
   h2.section{font-size:14px; color:var(--accent); font-weight:700; margin:24px 0 8px; font-family:Arial,sans-serif;}
 
-  .day-block{margin-bottom:22px; break-inside:avoid; page-break-inside:avoid;}
-  .day-header{display:flex; align-items:center; gap:8px; margin-bottom:6px; background:var(--accent); border-radius:3px; padding:6px 10px;}
+  .day-block{margin-bottom:22px;}
+  .day-header{display:flex; align-items:center; gap:8px; margin-bottom:6px; background:var(--accent); border-radius:3px; padding:6px 10px; break-after:avoid; page-break-after:avoid;}
   .day-header .day-num{font-family:Arial,sans-serif; font-weight:700; color:#fff; font-size:13px; flex:none;}
   .day-header .day-sep{color:#fff; opacity:.7; flex:none;}
   .day-header input[type=text]{
@@ -126,7 +126,7 @@
     font-family:Arial,sans-serif; background:transparent;
   }
   td.time-cell .time-row{display:flex; align-items:center; gap:4px; margin-bottom:3px;}
-  td.time-cell .time-row-label{font-size:9px; text-transform:uppercase; color:var(--muted); font-family:"Helvetica Neue",Arial,sans-serif; flex:none; width:26px;}
+  td.time-cell .time-row-label{font-size:9px; text-transform:uppercase; color:var(--muted); font-family:"Helvetica Neue",Arial,sans-serif; flex:none; width:22px;}
   td.time-cell select.time-select{
     flex:1; min-width:0; border:none; border-bottom:1px solid var(--line); background:transparent;
     font-family:inherit; font-size:12.5px; padding:3px 2px; color:var(--ink);
@@ -173,7 +173,7 @@
     td.time-cell select.time-select{border:1px solid #999 !important; background:#fff !important; color:#000 !important; -webkit-appearance:none; appearance:none;}
   }
   @page{
-    size: A4; margin: 0.4in; margin-top: 0.75in;
+    size: A4; margin: 0.75in; margin-top: 0.75in;
     @bottom-center{
       content: "Page " counter(page) " of " counter(pages);
       font-family: "Helvetica Neue", Arial, sans-serif;
@@ -351,8 +351,8 @@ function addDay(meta, rows){
       <button class="day-del" onclick="removeDay('${id}')" style="margin-left:auto;">✕ Remove day</button>
     </div>
     <table class="grid">
-      <colgroup><col style="width:16%"><col style="width:32%"><col style="width:24%"><col style="width:28%"></colgroup>
-      <thead><tr><th>Time</th><th>Session</th><th>Facilitator</th><th>Resources</th></tr></thead>
+      <colgroup><col style="width:19%"><col style="width:22%"><col style="width:14%"><col style="width:20%"><col style="width:25%"></colgroup>
+      <thead><tr><th>Time</th><th>Session</th><th>Method</th><th>Resources/Materials</th><th>Facilitator</th></tr></thead>
       <tbody></tbody>
     </table>
     <div class="table-actions">
@@ -395,18 +395,18 @@ function addSessionRow(dayId, data){
   data = data || {};
   const timeStart = data.timeStart || '';
   const timeEnd = data.timeEnd || '';
-  const otherCols = ['session','resources'];
   tr.innerHTML = `<td class="time-cell">
       <div class="time-row"><span class="time-row-label">From</span><select class="time-select time-start" onchange="updateTimeLabel(this)"></select></div>
       <div class="time-row"><span class="time-row-label">To</span><select class="time-select time-end" onchange="updateTimeLabel(this)"></select></div>
       <div class="time-label"></div>
     </td>
     <td><textarea rows="1" data-col="session" oninput="autoGrow(this)">${escapeHtml(data.session||'')}</textarea></td>
+    <td><textarea rows="1" data-col="method" oninput="autoGrow(this)">${escapeHtml(data.method||'')}</textarea></td>
+    <td><textarea rows="1" data-col="resources" oninput="autoGrow(this)">${escapeHtml(data.resources||'')}</textarea></td>
     <td><div class="facilitator-picker" data-value="${escapeAttr(data.facilitator||'')}">
         <div class="facilitator-display" onclick="toggleFacilitatorMenu(this)"></div>
         <div class="facilitator-menu"></div>
-      </div></td>
-    <td><textarea rows="1" data-col="resources" oninput="autoGrow(this)">${escapeHtml(data.resources||'')}</textarea></td>`;
+      </div></td>`;
   tbody.appendChild(tr);
   const delBtn = document.createElement('button');
   delBtn.className = 'row-del';
@@ -438,7 +438,7 @@ function addBreakRow(dayId, label, data){
       <div class="time-row"><span class="time-row-label">To</span><select class="time-select time-end" onchange="updateTimeLabel(this)"></select></div>
       <div class="time-label"></div>
     </td>
-    <td colspan="3" class="break-cell"><div class="break-wrap"><textarea rows="1" data-col="breakLabel" oninput="autoGrow(this)">${escapeHtml(data.breakLabel || label)}</textarea></div></td>`;
+    <td colspan="4" class="break-cell"><div class="break-wrap"><textarea rows="1" data-col="breakLabel" oninput="autoGrow(this)">${escapeHtml(data.breakLabel || label)}</textarea></div></td>`;
   tbody.appendChild(tr);
   const delBtn = document.createElement('button');
   delBtn.className = 'row-del';
